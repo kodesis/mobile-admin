@@ -6,6 +6,13 @@
 <script type="text/javascript" src="<?= base_url() ?>assets/plugins/charts/charts.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/plugins/charts/charts-call-graphs.js"></script>
 
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/rowreorder/1.5.0/js/dataTables.rowReorder.js"></script>
+<script src="https://cdn.datatables.net/rowreorder/1.5.0/js/rowReorder.dataTables.js"></script>
+<script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.js"></script>
+<script src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.dataTables.js"></script>
+
 <!-- Sweetalert -->
 <script src="<?= base_url() ?>assets/vendor/sweetalert2/js/sweetalert2.all.min.js"></script>
 <!-- Select2 -->
@@ -14,6 +21,7 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 <!-- My Script -->
 <script src="<?= base_url('assets/js/myscript.js') ?>"></script>
+
 
 <script>
     ClassicEditor.create(document.querySelector("#isi_memo")).then(editor => instance = editor);
@@ -44,12 +52,19 @@
             })
         <?php } ?>
     })
-    
+
     function PageReload() {
-      setTimeout(function() {
-        location.reload();
-      }, 2000);
+        setTimeout(function() {
+            location.reload();
+        }, 2000);
     }
+
+    new DataTable('#example', {
+        responsive: true,
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        }
+    });
 </script>
 </body>
 

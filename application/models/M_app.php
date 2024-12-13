@@ -130,4 +130,23 @@ class M_app extends CI_Model
         $query = $this->db->query($sql);
         return $query->row_array();
     }
+    function user_get_detail($nip)
+    {
+        $sql = "SELECT * from users where nip='$nip' ";
+        $query = $this->db->query($sql);
+        return $query->row();
+    }
+    function user_count($nip)
+    {
+        $sql = "SELECT id FROM users";
+        $query = $this->db->query($sql);
+        return $query->num_rows();
+    }
+    function user_get($limit, $start, $nip)
+    {
+        $nip = '';
+        $sql = "SELECT * FROM users ORDER BY id DESC limit " . $start . ", " . $limit;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
 }

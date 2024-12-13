@@ -103,7 +103,31 @@
             </a>
         </div>
     <?php } ?>
-    
+
+    <!-- Menu Task -->
+    <?php
+    $a = $this->session->userdata('level');
+    if (strpos($a, '60') !== false) { ?>
+        <h6 class="menu-divider mt-3">Absensi</h6>
+        <div class="list-group list-custom-small list-menu">
+            <a id="nav-welcome" href="<?= base_url('absensi/absen_wfa') ?>">
+                <i class="fa-solid fa-list gradient-blue color-white"></i>
+                <span>Absensi WFA</span>
+                <i class="fa fa-angle-right"></i>
+            </a>
+            <a id="nav-welcome" href="<?= base_url('absensi/user_photo') ?>">
+                <i class="fa-solid fa-list gradient-blue color-white"></i>
+                <span>Data Photo</span>
+                <i class="fa fa-angle-right"></i>
+            </a>
+            <!-- <a id="nav-welcome" href="<?= base_url('absensi/user') ?>">
+                <i class="fa-solid fa-plus gradient-blue color-white"></i>
+                <span>User List</span>
+                <i class="fa fa-angle-right"></i>
+            </a> -->
+        </div>
+    <?php } ?>
+
     <h6 class="menu-divider mt-3">Setting</h6>
     <div class="list-group list-custom-small list-menu">
         <a id="nav-welcome" href="<?= base_url('auth/password') ?>">

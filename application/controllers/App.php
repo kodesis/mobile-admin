@@ -7,6 +7,7 @@ class App extends CI_Controller
     {
         parent::__construct();
         $this->load->library('Api_Whatsapp');
+        $this->load->model('m_app');
         if ($this->session->userdata('isLogin') == FALSE) {
             $this->session->set_flashdata(
                 'msg',
@@ -342,5 +343,280 @@ class App extends CI_Controller
             $this->session->set_flashdata('forbidden', 'Not Allowed!');
             redirect('home');
         }
+    }
+    public function user()
+    {
+        $a = $this->session->userdata('level');
+        if (strpos($a, '401') !== false) {
+            $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
+            // Pagination
+            $config['base_url'] = base_url('app/inbox');
+            $config['total_rows'] = $this->M_app->countMemo($search);
+            $config['per_page'] = 10;
+            $config['uri_segment'] = 3;
+            $config['num_links'] = 1;
+            $config['enable_query_strings'] = TRUE;
+            $config['page_query_string'] = TRUE;
+            $config['use_page_numbers'] = TRUE;
+            $config['reuse_query_string'] = TRUE;
+            $config['query_string_segment'] = 'page';
+
+            // Bootstrap style pagination
+            $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+            $config['full_tag_close'] = '</ul>';
+            $config['first_link'] = '<i class="fa-solid fa-angles-left"></i>';
+            $config['first_tag_open'] = '<li class="page-item">';
+            $config['first_tag_close'] = '</li>';
+            $config['last_link'] = '<i class="fa-solid fa-angles-right"></i>';
+            $config['last_tag_open'] = '<li class="page-item">';
+            $config['last_tag_close'] = '</li>';
+            $config['prev_link'] = '<i class="fa-solid fa-angle-left"></i>';
+            $config['prev_tag_open'] = '<li class="page-item">';
+            $config['prev_tag_close'] = '</li>';
+            $config['next_link'] = '<i class="fa-solid fa-angle-right"></i>';
+            $config['next_tag_open'] = '<li class="page-item">';
+            $config['next_tag_close'] = '</li>';
+            $config['cur_tag_open'] = '<li class="page-item active"><a href="#" class="page-link">';
+            $config['cur_tag_close'] = '</a></li>';
+            $config['num_tag_open'] = '<li class="page-item">';
+            $config['num_tag_close'] = '</li>';
+            $config['attributes'] = array('class' => 'page-link rounded-xs bg-dark-dark color-white shadow-l border-0');
+
+            // Initialize paginaton
+            $this->pagination->initialize($config);
+            $page = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
+            $data['inbox'] = $this->M_app->memo_get($config['per_page'], $page, $search);
+            $data['pagination'] = $this->pagination->create_links();
+
+            $this->load->view('Layouts/v_header', $data);
+            $this->load->view('absensi/v_user_list', $data);
+            $this->load->view('Layouts/v_footer');
+        } else {
+            $this->session->set_flashdata('forbidden', 'Not Allowed!');
+            redirect('home');
+        }
+    }
+    public function absen_wfa()
+    {
+        if ($this->session->userdata('isLogin') == FALSE) {
+            redirect('home');
+        } else {
+            //inbox notif
+            $nip = $this->session->userdata('nip');
+            $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+            $sql2 = "SELECT * FROM asset_ruang";
+            $sql3 = "SELECT * FROM asset_lokasi";
+            $query = $this->db->query($sql);
+            $query2 = $this->db->query($sql2);
+            $query3 = $this->db->query($sql3);
+            $res2 = $query->result_array();
+            $asset_ruang = $query2->result();
+            $asset_lokasi = $query3->result();
+            $result = $res2[0]['COUNT(Id)'];
+            $data['count_inbox'] = $result;
+            $data['asset_ruang'] = $asset_ruang;
+            $data['asset_lokasi'] = $asset_lokasi;
+
+            // Tello
+            $sql4 = "SELECT COUNT(Id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+            $query4 = $this->db->query($sql4);
+            $res4 = $query4->result_array();
+            $result4 = $res4[0]['COUNT(Id)'];
+            $data['count_inbox2'] = $result4;
+
+            $this->load->model(
+                'M_absen',
+                'user'
+            );
+            $data['cek_user'] = $this->user->cek_user();
+            $data['lokasi_absensi'] = $this->user->get_location();
+
+            $data['data_user'] = $this->user->get_user();
+            $this->load->view('absen_wfh_view', $data);
+        }
+    }
+    public function fetch_user()
+    {
+        $this->load->model('M_absen', 'user');
+        $users = $this->user->get_user(); // Fetch all users from the database
+
+        if ($users) {
+            // If using result_array(), users will be an array, even if there's only one user
+            $hasPicture = false;
+
+            // Iterate over users (even if it's just one user) to check if 'userImage' is not null
+            foreach ($users as $user) {
+                if (!empty($user['userImage'])) {
+                    $hasPicture = true; // If 'userImage' is not empty, set flag to true
+                    break; // No need to continue looping if we find a picture
+                }
+            }
+
+            if (!$hasPicture) {
+                echo json_encode([
+                    'status' => 'No Picture'
+                ]);
+            } else {
+                // Load the user table view and capture its output
+                $data['users'] = $users;
+                $tableHTML = $this->load->view('userTable', $data, TRUE);
+
+                echo json_encode([
+                    'status' => 'success',
+                    'data' => $users,
+                    'html' => $tableHTML
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'No records found'
+            ]);
+        }
+    }
+    public function user_photo()
+    {
+        if ($this->session->userdata('isLogin') == FALSE) {
+            redirect('home');
+        } else {
+            $a = $this->session->userdata('level');
+            if (strpos($a, '401') !== false) {
+                $data['user'] = $this->m_app->user_get_detail($this->sessuin->userdata(''));
+                if (empty($data['user'])) {
+                    echo "<script>alert('Unauthorize Privilage!');window.history.back();</script>";
+                } else {
+                    //inbox notif
+                    $nip = $this->session->userdata('nip');
+                    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+                    $query = $this->db->query($sql);
+                    $res2 = $query->result_array();
+                    $result = $res2[0]['COUNT(Id)'];
+                    $data['count_inbox'] = $result;
+
+                    $sql3 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+                    $query3 = $this->db->query($sql3);
+                    $res3 = $query3->result_array();
+                    $result3 = $res3[0]['COUNT(id)'];
+                    $data['count_inbox2'] = $result3;
+
+                    $this->load->view('user_view_photo', $data);
+                }
+            }
+        }
+    }
+    public function add_photo()
+    {
+        $this->load->model('M_absen', 'user');
+        $id_edit = $this->input->post('id');
+        $username = $this->input->post('username');
+
+        $imageFileNames = [];
+        $folderPath = FCPATH . "resources/labels/{$username}/";
+
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0777, true);
+        }
+
+        // Process images
+        for ($i = 1; $i <= 5; $i++) {
+            $capturedImage = $this->input->post("capturedImage{$i}");
+            if ($capturedImage) {
+                $base64Data = explode(',', $capturedImage)[1];
+                $imageData = base64_decode($base64Data);
+                $labelName = "{$i}.png";
+                file_put_contents("{$folderPath}{$labelName}", $imageData);
+                $imageFileNames[] = $labelName;
+            }
+        }
+
+        $imagesJson = json_encode($imageFileNames);
+
+        // Check for duplicate registration number
+
+        // Save the student
+        $edit_data = [
+            'userImage' => $imagesJson,
+        ];
+        $this->db->where(
+            'id',
+            $id_edit
+        );
+        $this->db->update('users', $edit_data);
+        $this->session->set_flashdata('message', "Student: $username added successfully!");
+        echo "Student: $username added successfully!";
+
+
+
+        redirect('app/user');
+    }
+    public function recordAttendance()
+    {
+        $this->load->model('M_absen', 'user');
+
+        // Only allow POST requests
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
+
+        $attendanceData = json_decode(file_get_contents("php://input"), true);
+
+        if (!$attendanceData) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'No attendance data received.'
+            ]);
+            return;
+        }
+
+        $response = $this->user->insertAttendance($attendanceData);
+
+        echo json_encode($response);
+    }
+    public function delete_user_images()
+    {
+        // Get JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($input['username']) || empty($input['username'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Username is required.']);
+            return;
+        }
+
+        $username = $input['username'];
+
+        // Fetch user data
+        $user = $this->db->get_where('users', ['username' => $username])->row();
+
+        if (!$user || empty($user->userImage)) {
+            echo json_encode(['status' => 'error', 'message' => 'No images found for this user.']);
+            return;
+        }
+
+        $images = json_decode($user->userImage, true); // Decode JSON array
+        $path = FCPATH . 'resources/labels/' . $username . '/';
+
+        // Delete all images in the directory
+        foreach ($images as $image) {
+            $file = $path . $image;
+            if (is_file($file)) {
+                unlink($file); // Delete each image
+            }
+        }
+
+        // Clear userImage field by setting it to NULL
+        $this->db->where('username', $username);
+        $this->db->set('userImage', 'NULL', false);
+        $this->db->update('users');
+
+        if ($this->db->affected_rows() > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'All images deleted and userImage set to NULL successfully.']);
+            return;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update userImage field to NULL.']);
+            return;
+        }
+
+        echo json_encode(['status' => 'success', 'message' => 'All images deleted and userImage set to NULL successfully.']);
     }
 }

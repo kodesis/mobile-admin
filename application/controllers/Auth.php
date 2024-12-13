@@ -85,7 +85,7 @@ class Auth extends CI_Controller
         $this->session->sess_destroy();
         redirect('auth');
     }
-    
+
     public function password()
     {
         if ($this->session->userdata('isLogin') == FALSE) {
