@@ -1,0 +1,25 @@
+h2.swal2-title {
+    color: black !important;
+}
+
+.theme-dark .select2-container--default .select2-selection--multiple {
+    background-color: transparent !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0px;
+}
+
+.theme-dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #212529;
+}
+
+.theme-dark .select2-results__option {
+    color: black;
+}
+
+.theme-dark span.ck-button__label {
+    color: black !important;
+}
+
+.theme-dark select option{
+    background-color: #212529;
+}
