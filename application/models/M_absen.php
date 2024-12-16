@@ -104,6 +104,6 @@ class M_absen extends CI_Model
         $query = $this->db->get();
 
         // return $query->result_array(); // Return the result as an array
-        return $query->row(); // Return the result as an array
+        return $query->result(); // Return the result as an array
     }
 }

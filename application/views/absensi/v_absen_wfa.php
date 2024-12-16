@@ -42,7 +42,7 @@
     <?php include APPPATH . '/views/v_nav.php' ?>
     <div class="page-content">
         <div class="content mt-0 mb-3">
-            <h3 class="text-center my-3">USER PHOTO</h3>
+            <h3 class="text-center my-3">ABSEN WFA</h3>
             <!-- <div class="search-box shadow-xl border-0 bg-theme rounded-sm bottom-0">
                 <form action="" method="get">
                     <i class="fa fa-search"></i>
@@ -490,11 +490,33 @@
     if (empty($cek_user)) {
     ?>
         const callOnceLocation = getLocation();
-    <?php
+        <?php
     } else {
-    ?>
-        Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
+        $current_time = new DateTime(); // Current time
+        $jam_masuk_plus_two = (new DateTime($cek_user['jam_masuk']))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($cek_user['jam_keluar']))->modify('+2 hours');
+
+        $this->db->select('*'); // Fetch all columns
+        $this->db->from('tblattendance'); // Table name
+        $this->db->where('username', $this->session->userdata('username')); // Filter by username
+        $this->db->where('DATE(date)', date('Y-m-d')); // Add condition for today's date
+        $this->db->group_start(); // Start grouping conditions
+        $this->db->where('TIME(waktu) <=', $jam_masuk_plus_two); // Check for under jam_masuk_plus_two
+        $this->db->or_where('TIME(waktu) >=', $jam_keluar_plus_two); // Check for over jam_keluar_plus_two
+        $this->db->group_end(); // End grouping conditions
+        $query = $this->db->get(); // Execute the query
+
+        $result = $query->result_array(); // Fetch results
+
+        if (empty($result) || count($result) === 1) {
+        ?>
+            const callOnceLocation = getLocation();
+        <?php
+        } else {
+        ?>
+            Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
     <?php
+        }
     }
     ?>
 

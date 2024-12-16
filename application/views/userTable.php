@@ -1,3 +1,13 @@
+<style>
+    .theme-dark .body-table tr td {
+        color: #fff;
+    }
+
+    .theme-light .body-table tr td {
+        color: #000;
+    }
+</style>
+
 <div class="table mobile-only">
     <table class="table table-striped jambo_table bulk_action">
         <thead>
@@ -10,7 +20,7 @@
                 <th>Settings</th>
             </tr>
         </thead>
-        <tbody id="studentTableContainer">
+        <tbody id="studentTableContainer" class="body-table">
             <?php foreach ($users as $user):
                 echo "<tr>";
                 $username = $user["username"];
