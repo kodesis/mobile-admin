@@ -129,7 +129,7 @@ class Absensi extends CI_Controller
         $this->load->model('M_absen', 'user');
         $data_user = $this->user->data_user();
         $users = $this->user->get_user(); // Fetch all users from the database
-
+        $data['tipe'] = $tipe;
         if ($data_user && isset($data_user->jam_masuk) && isset($data_user->jam_keluar)) {
             $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
             $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
@@ -165,7 +165,6 @@ class Absensi extends CI_Controller
                     $users = $this->db->get()->result_array();
 
                     $data['users'] = $users;
-                    $data['tipe'] = $tipe;
                 } else if ($tipe == 'pulang') {
                     $this->db->select('*'); // Fetch only these columns
                     $this->db->from('tblattendance'); // Table name
@@ -176,14 +175,13 @@ class Absensi extends CI_Controller
                     // return $query->result_array(); // Return the result as an array
 
                     $data['users'] = $users;
-                    $data['tipe'] = $tipe;
                 } else {
                     $data['users'] = $users;
-                    $data['tipe'] = $tipe;
                 }
                 $tableHTML = $this->load->view('userTable', $data, TRUE);
                 echo json_encode([
                     'status' => 'success',
+                    'tipe' => $tipe,
                     'data' => $users,
                     'html' => $tableHTML
                 ]);

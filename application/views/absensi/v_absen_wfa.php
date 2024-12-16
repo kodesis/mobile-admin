@@ -95,7 +95,8 @@
         <!-- <a href="<?= base_url('app/create_memo') ?>" class="btn" id="btn-create"><i class="fa-solid fa-plus"></i></a> -->
     </div>
 </div>
-<script defer src="<?= base_url() ?>resources/assets/javascript/face_logics/face-api.min.js"></script>
+<script src="<?= base_url() ?>resources/assets/javascript/face_logics/face-api.min.js"></script>
+
 <script src="<?= base_url() ?>assets/vendor/sweetalert2/js/sweetalert2.all.min.js"></script>
 
 <script>
@@ -211,12 +212,15 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
+
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
                     console.log(labels);
                     updateOtherElements();
 
                     document.getElementById("studentTableContainer").innerHTML = response.html;
+
+
                 } else if (response.status === "No Picture") {
                     Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
 
@@ -238,11 +242,12 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
+                    document.getElementById("studentTableContainer").innerHTML = response.html;
+
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
                     console.log(labels);
 
-                    document.getElementById("studentTableContainer").innerHTML = response.html;
                 } else if (response.status === "No Picture") {
                     Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
 
@@ -264,11 +269,12 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
+                    document.getElementById("studentTableContainer").innerHTML = response.html;
+
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
                     console.log(labels);
 
-                    document.getElementById("studentTableContainer").innerHTML = response.html;
                 } else if (response.status === "No Picture") {
                     Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
 
@@ -350,10 +356,12 @@
         let webcamStarted = false;
         let modelsLoaded = false;
 
+        const baseUrl = "<?php echo base_url(); ?>";
+
         Promise.all([
-                faceapi.nets.ssdMobilenetv1.loadFromUri("../../models"),
-                faceapi.nets.faceRecognitionNet.loadFromUri("../../models"),
-                faceapi.nets.faceLandmark68Net.loadFromUri("../../models"),
+                faceapi.nets.ssdMobilenetv1.loadFromUri("https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model"),
+                faceapi.nets.faceRecognitionNet.loadFromUri("https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model"),
+                faceapi.nets.faceLandmark68Net.loadFromUri("https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model")
             ])
             .then(() => {
                 modelsLoaded = true;

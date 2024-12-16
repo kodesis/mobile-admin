@@ -6,6 +6,25 @@
     .theme-light .body-table tr td {
         color: #000;
     }
+
+    /* Hide the table by default */
+    .table {
+        display: none;
+    }
+
+    /* Show the table only on smaller screen sizes */
+    @media (max-width: 768px) {
+        .table {
+            display: block;
+            overflow-x: auto;
+            /* For horizontal scrolling if the table is too wide */
+        }
+
+        table {
+            width: 100%;
+            /* Ensure table spans the full width of its container */
+        }
+    }
 </style>
 
 <div class="table mobile-only">
@@ -75,24 +94,3 @@
         </tbody>
     </table>
 </div>
-
-<style>
-    /* Hide the table by default */
-    .table {
-        display: none;
-    }
-
-    /* Show the table only on smaller screen sizes */
-    @media (max-width: 768px) {
-        .table {
-            display: block;
-            overflow-x: auto;
-            /* For horizontal scrolling if the table is too wide */
-        }
-
-        table {
-            width: 100%;
-            /* Ensure table spans the full width of its container */
-        }
-    }
-</style>
