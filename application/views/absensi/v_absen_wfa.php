@@ -284,7 +284,9 @@
     function markAttendance(detectedFaces) {
         document.querySelectorAll("#studentTableContainer tr").forEach((row) => {
 
-            const username = row.cells[0].innerText.trim();
+            // const username = row.cells[0].innerText.trim();
+            const username = document.getElementById('username').innerText; // Update attendance status
+
             <?php
 
             date_default_timezone_set('Asia/Jakarta');
@@ -296,29 +298,41 @@
                 if (isWithinRange) {
                     <?php
                     if ($current_time <= $jam_masuk_plus_two || $current_time >= $jam_keluar_plus_two) {
-
                     ?>
-                        row.cells[3].innerText = "present";
-                        row.cells[4].innerText = locationName;
+                        document.getElementById('absent').innerText = "Present"; // Update attendance status
+                        document.getElementById('lokasi').innerText = locationName; // Update location
                     <?php
                     } else {
                     ?>
-                        row.cells[3].innerText = "Pending";
-                        row.cells[4].innerText = locationName;
+                        document.getElementById('absent').innerText = "Pending"; // Update attendance status
+                        document.getElementById('lokasi').innerText = locationName; // Update location
                     <?php
                     }
                     ?>
                 } else {
-                    row.cells[3].innerText = "pending";
-                    row.cells[4].innerText = "Di Luar";
+                    document.getElementById('absent').innerText = "Pending"; // Update attendance status
+                    document.getElementById('lokasi').innerText = "Di Luar"; // Update location
                 }
-                const currentDate = new Date(); // Get the current date
+                const currentDate = new Date(); // Get the current date and time (UTC by default)
 
-                // Format the date as "YYYY-MM-DD"
-                const formattedDate = currentDate.toISOString().split("T")[0];
+                // Calculate the time offset for Indonesia (UTC+7 for WIB, UTC+8 for WITA, UTC+9 for WIT)
+                const indonesiaTimeOffset = 7; // Change to 8 or 9 for WITA or WIT, respectively
+                const indonesiaTime = new Date(currentDate.getTime() + indonesiaTimeOffset * 60 * 60 * 1000);
+
+                // Format the date and time as "YYYY-MM-DD HH:MM:SS"
+                const formattedDateTime = indonesiaTime.toISOString().replace("T", " ").split(".")[0];
+
+                // Format only the date as "YYYY-MM-DD"
+                const formattedDateOnly = indonesiaTime.toISOString().split("T")[0];
+
+                // Update the element with id='tanggal' to display the full date and time
+                document.getElementById('tanggal').innerText = formattedDateTime;
+
+                // Update the element with id='tanggalonly' to display only the date
+                document.getElementById('tanggalonly').innerText = formattedDateOnly;
 
 
-                row.cells[5].innerText = formattedDate;
+
 
                 Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
                 sendAttendanceDataToServer();
@@ -474,13 +488,19 @@
             .querySelectorAll("#studentTableContainer tr")
             .forEach((row, index) => {
                 if (index === 0) return;
-                const username = row.cells[0].innerText.trim();
-                const nip = row.cells[1].innerText.trim();
-                const nama = row.cells[2].innerText.trim();
-                const attendanceStatus = row.cells[3].innerText.trim();
-                const lokasiAttendance = row.cells[4].innerText.trim();
-                const tanggalAttendance = row.cells[5].innerText.trim();
+                // const username = row.cells[0].innerText.trim();
+                // const nip = row.cells[1].innerText.trim();
+                // const nama = row.cells[2].innerText.trim();
+                // const attendanceStatus = row.cells[3].innerText.trim();
+                // const lokasiAttendance = row.cells[4].innerText.trim();
+                // const tanggalAttendance = row.cells[5].innerText.trim();
 
+                const username = document.getElementById('username').innerText;
+                const nip = document.getElementById('nip').innerText;
+                const nama = document.getElementById('nama').innerText;
+                const attendanceStatus = document.getElementById('absent').innerText;
+                const lokasiAttendance = document.getElementById('lokasi').innerText;
+                const tanggalAttendance = document.getElementById('tanggalonly').innerText;
                 attendanceData.push({
                     username,
                     nip,

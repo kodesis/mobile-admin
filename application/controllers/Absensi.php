@@ -326,4 +326,20 @@ class Absensi extends CI_Controller
 
         echo json_encode(['status' => 'success', 'message' => 'All images deleted and userImage set to NULL successfully.']);
     }
+    public function tes()
+    {
+        $a = $this->session->userdata('level');
+        if (strpos($a, '401') !== false) {
+            $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
+            $data['user'] = $this->m_app->user_get_detail($this->session->userdata('nip'));
+
+
+            $this->load->view('Layouts/v_header', $data);
+            $this->load->view('userTable', $data);
+            $this->load->view('Layouts/v_footer');
+        } else {
+            $this->session->set_flashdata('forbidden', 'Not Allowed!');
+            redirect('home');
+        }
+    }
 }
