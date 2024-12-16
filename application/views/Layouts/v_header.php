@@ -20,7 +20,7 @@
     <!-- My Style -->
     <link rel="stylesheet" href="<?= base_url('assets/css/mystyle.css') ?>">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/images/logo-mlejit.png">
+    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/images/kodesis_kotak.png">
 </head>
 
 <body class="theme-light">

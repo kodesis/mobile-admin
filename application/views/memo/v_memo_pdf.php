@@ -24,7 +24,7 @@
         <div class="clearfix"></div>
 
         <div class="x_panel card">
-            <img src="<?= base_url('assets/images/logo-mlejit.png') ?>" alt="" width="10%">
+            <img src="<?= base_url('assets/images/kodesis_kotak.png') ?>" alt="" width="10%">
             <br><br>
             <div align="center">
                 <font style="font-size:17px;">

@@ -13,8 +13,8 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/fonts/css/fontawesome-all.min.css" />
     <link rel="manifest" href="<?= base_url() ?>assets/json/_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js" />
     <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>aseets/icons/icon-192x192.png" />
-     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/images/logo-mlejit.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?= base_url() ?>assets/images/kodesis_kotak.png">
 </head>
 
 <body class="theme-light">

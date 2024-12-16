@@ -8,7 +8,7 @@
 
                 <div class="text-center">
 
-                    <img src="<?= base_url() ?>assets/images/logo-mlejit.png" alt="logo" width="50%" class="mb-5" id="logo-login">
+                    <img src="<?= base_url() ?>assets/images/kodesis_kotak.png" alt="logo" width="50%" class="mb-5" id="logo-login">
 
                 </div>
 

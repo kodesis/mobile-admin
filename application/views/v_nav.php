@@ -1,5 +1,5 @@
 <div class="header header-auto-show header-fixed header-logo-center">
-    <a href="<?= base_url() ?>" class="header-title"><img src="<?= base_url() ?>assets/images/logo-mlejit.png" alt="logo" width="35px" id="logo-mlejit"></a>
+    <a href="<?= base_url() ?>" class="header-title"><img src="<?= base_url() ?>assets/images/kodesis_kotak.png" alt="logo" width="50px" id="kodesis_kotak"></a>
     <?php if (!$this->uri->segment(2)) { ?>
         <a href="#" data-menu="menu-main" class="header-icon header-icon-1"><i class="fas fa-bars"></i></a>
     <?php } else { ?>
@@ -43,7 +43,7 @@
 <?php } ?>
 
 <div class="page-title page-title-fixed">
-    <h1><img src="<?= base_url() ?>assets/images/logo-mlejit.png" alt="logo" width="35px" id="logo-mlejit"></h1>
+    <h1><img src="<?= base_url() ?>assets/images/kodesis_kotak.png" alt="logo" width="50px" id="kodesis_kotak"></h1>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme" data-menu="menu-main"><i class="fa fa-bars"></i></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-light" data-toggle-theme><i class="fa fa-moon"></i></a>
     <a href="#" class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark" data-toggle-theme><i class="fa fa-lightbulb color-yellow-dark"></i></a>
