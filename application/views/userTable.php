@@ -8,27 +8,55 @@
     }
 
     /* Hide the table by default */
+    /* Default table styles */
+    /* Default table styles */
+    /* Table styling */
     .table {
-        display: none;
+        /* Hide table by default */
+        width: 100%;
+        /* Ensure table spans full width of container */
+        table-layout: auto;
+        /* Automatically adjust column width based on content */
     }
 
-    /* Show the table only on smaller screen sizes */
+    /* Show table only on smaller screens */
     @media (max-width: 768px) {
-        .table {
+        .table-container {
             display: block;
+            /* Make the container block-level */
             overflow-x: auto;
-            /* For horizontal scrolling if the table is too wide */
+            /* Allow horizontal scrolling if the table exceeds screen width */
         }
 
-        table {
+        .table {
+            /* No need to set display: block here, revert it to default */
             width: 100%;
-            /* Ensure table spans the full width of its container */
+            /* Ensure table spans the full width of the container */
+        }
+
+        /* Ensure each <tr> takes up the full width of the table */
+        .table tr {
+            width: 100%;
+            /* Ensure rows take up the full table width */
+        }
+
+        /* Ensure table cells adjust based on content */
+        .table td {
+            word-wrap: break-word;
+            /* Allow text to wrap inside cells */
+            white-space: normal;
+            /* Allow text to break and not overflow */
+        }
+
+        /* Make sure table header adjusts to full width as well */
+        .table th {
+            width: 100%;
         }
     }
 </style>
 
 <div class="table mobile-only">
-    <table class="table table-striped jambo_table bulk_action">
+    <table class="table table-striped bulk_action">
         <tbody id="studentTableContainer" class="body-table">
             <?php
             if ($tipe == NULL) {
