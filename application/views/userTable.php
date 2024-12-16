@@ -61,7 +61,7 @@
                     echo "<td id='lokasi'></td>"; // No location for Absent
                     echo "</tr>";
                 endforeach;
-            } else if ($tipe == 'masuk' || $tipe == 'pulang') {
+            } else if ($tipe == 'masuk' || $tipe == 'pulang' || $tipe == 'absensi') {
                 foreach ($users as $user):
                     echo "<tr>";
                     echo "<td>Nip</td>";

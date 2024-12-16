@@ -112,8 +112,19 @@ class Absensi extends CI_Controller
             $query = $this->db->get(); // Execute the query
             $result2 = $query->result_array(); // Fetch results
 
+            $this->db->select('*');
+            $this->db->from('tblattendance');
+            $this->db->where('username', $this->session->userdata('username')); // Filter by username
+            $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+            $this->db->where('TIME(waktu) >=', $jam_masuk_plus_two); // Check for records after jam_masuk_plus_two
+            $this->db->where('TIME(waktu) <=', $jam_keluar_plus_two); // Check for records before jam_keluar_plus_two
+            $query = $this->db->get(); // Execute the query
+            $result3 = $query->result_array(); // Fetch results
+
+
             $data['result1'] = $result1;
             $data['result2'] = $result2;
+            $data['result3'] = $result3;
 
             $this->load->view('Layouts/v_header', $data);
             $this->load->view('absensi/v_absen_wfa', $data);
@@ -174,6 +185,15 @@ class Absensi extends CI_Controller
                     $users = $this->db->get()->result_array();
                     // return $query->result_array(); // Return the result as an array
 
+                    $data['users'] = $users;
+                } else if ($tipe == 'absensi') {
+                    $this->db->select('*');
+                    $this->db->from('tblattendance');
+                    $this->db->where('username', $this->session->userdata('username')); // Filter by username
+                    $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+                    $this->db->where('TIME(waktu) >=', $jam_masuk_plus_two); // Check for records after jam_masuk_plus_two
+                    $this->db->where('TIME(waktu) <=', $jam_keluar_plus_two); // Check for records before jam_keluar_plus_two
+                    $users = $this->db->get()->result_array();
                     $data['users'] = $users;
                 } else {
                     $data['users'] = $users;

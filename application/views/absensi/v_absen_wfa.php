@@ -287,6 +287,33 @@
         xhr.send();
     }
 
+    function updateTableAbsensi() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "fetch_user/absensi", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === "success") {
+                    document.getElementById("studentTableContainer").innerHTML = response.html;
+
+                    students = response.data; // Store the student data
+                    labels = students.map(student => student.username);
+                    console.log(labels);
+
+                } else if (response.status === "No Picture") {
+                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+
+                } else {
+                    console.error("Error:", response.message);
+                }
+            }
+        };
+
+        xhr.send();
+    }
+
     function markAttendance(detectedFaces) {
         document.querySelectorAll("#studentTableContainer tr").forEach((row) => {
 
@@ -341,10 +368,11 @@
 
 
                 Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
-                sendAttendanceDataToServer();
                 const videoContainer = document.querySelector(".video-container");
                 videoContainer.style.display = "none";
                 stopWebcam();
+                sendAttendanceDataToServer();
+
             }
         });
     }
@@ -484,39 +512,37 @@
                     });
                     drawBox.draw(canvas);
                 });
+
             }, 100);
         });
 
     }
 
+    let isSubmitting = false; // Flag to track if data is being submitted
+
     function sendAttendanceDataToServer() {
+        if (isSubmitting) return; // Prevent multiple submissions
+
+        isSubmitting = true; // Set the flag to prevent re-submission
+
         const attendanceData = [];
 
-        document
-            .querySelectorAll("#studentTableContainer tr")
-            .forEach((row, index) => {
-                if (index === 0) return;
-                // const username = row.cells[0].innerText.trim();
-                // const nip = row.cells[1].innerText.trim();
-                // const nama = row.cells[2].innerText.trim();
-                // const attendanceStatus = row.cells[3].innerText.trim();
-                // const lokasiAttendance = row.cells[4].innerText.trim();
-                // const tanggalAttendance = row.cells[5].innerText.trim();
 
-                const username = document.getElementById('username').innerText;
-                const nip = document.getElementById('nip').innerText;
-                const nama = document.getElementById('nama').innerText;
-                const attendanceStatus = document.getElementById('absent').innerText;
-                const lokasiAttendance = document.getElementById('lokasi').innerText;
-                const tanggalAttendance = document.getElementById('tanggalonly').innerText;
-                attendanceData.push({
-                    username,
-                    nip,
-                    nama,
-                    attendanceStatus,
-                    lokasiAttendance,
-                });
-            });
+        // Getting values for the attendance
+        const username = document.getElementById('username').innerText;
+        const nip = document.getElementById('nip').innerText;
+        const nama = document.getElementById('nama').innerText;
+        const attendanceStatus = document.getElementById('absent').innerText;
+        const lokasiAttendance = document.getElementById('lokasi').innerText;
+        const tanggalAttendance = document.getElementById('tanggalonly').innerText;
+
+        attendanceData.push({
+            username,
+            nip,
+            nama,
+            attendanceStatus,
+            lokasiAttendance,
+        });
 
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "recordAttendance", true);
@@ -524,6 +550,8 @@
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
+                isSubmitting = false; // Reset flag after request completes
+
                 if (xhr.status === 200) {
                     try {
                         const response = JSON.parse(xhr.responseText);
@@ -553,6 +581,7 @@
 
         xhr.send(JSON.stringify(attendanceData));
     }
+
 
     function showMessage(message) {
         var messageDiv = document.getElementById("messageDiv");
@@ -612,8 +641,13 @@
                 updateTablePulang(); // Call function
             <?php } ?>
         <?php } else { ?>
-            getLocation(); // Call function
-        <?php } ?>
+            <?php if (empty($result3)) { ?>
+                console.log('ada2');
+                getLocation(); // Call function
+            <?php } else { ?>
+                Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
+                updateTableAbsensi(); // Call function
+            <?php } ?> <?php } ?>
     <?php } ?>
     const currentTime = new Date("<?php echo $current_time->format('Y-m-d H:i:s'); ?>");
     console.log('Current time:', currentTime);
