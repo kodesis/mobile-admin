@@ -110,6 +110,11 @@
     if (strpos($a, '60') !== false) { ?>
         <h6 class="menu-divider mt-3">Absensi</h6>
         <div class="list-group list-custom-small list-menu">
+            <a id="nav-welcome" href="<?= base_url('absensi/absen_list') ?>">
+                <i class="fa-solid fa-list gradient-blue color-white"></i>
+                <span>Absensi List</span>
+                <i class="fa fa-angle-right"></i>
+            </a>
             <a id="nav-welcome" href="<?= base_url('absensi/absen_wfa') ?>">
                 <i class="fa-solid fa-list gradient-blue color-white"></i>
                 <span>Absensi WFA</span>

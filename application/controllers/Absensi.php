@@ -326,20 +326,101 @@ class Absensi extends CI_Controller
 
         echo json_encode(['status' => 'success', 'message' => 'All images deleted and userImage set to NULL successfully.']);
     }
-    public function tes()
+    // public function tes()
+    // {
+    //     $a = $this->session->userdata('level');
+    //     if (strpos($a, '401') !== false) {
+    //         $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
+    //         $data['user'] = $this->m_app->user_get_detail($this->session->userdata('nip'));
+
+
+    //         $this->load->view('Layouts/v_header', $data);
+    //         $this->load->view('userTable', $data);
+    //         $this->load->view('Layouts/v_footer');
+    //     } else {
+    //         $this->session->set_flashdata('forbidden', 'Not Allowed!');
+    //         redirect('home');
+    //     }
+    // }
+    public function absen_list()
     {
         $a = $this->session->userdata('level');
         if (strpos($a, '401') !== false) {
             $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
             $data['user'] = $this->m_app->user_get_detail($this->session->userdata('nip'));
 
-
             $this->load->view('Layouts/v_header', $data);
-            $this->load->view('userTable', $data);
+            $this->load->view('absensi/v_absensi_list', $data);
             $this->load->view('Layouts/v_footer');
         } else {
             $this->session->set_flashdata('forbidden', 'Not Allowed!');
             redirect('home');
         }
+    }
+
+    public function ajax_list()
+    {
+        $this->load->model('M_absen', 'user');
+
+        $list = $this->user->get_datatables();
+        $data = array();
+        $crs = "";
+        $no = $_POST['start'];
+
+        foreach ($list as $cat) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $cat->nip;
+            $row[] = $cat->nama;
+            $row[] = $cat->attendanceStatus;
+            $row[] = $cat->lokasiAttendance;
+            $row[] = $cat->tipe;
+            $row[] = $cat->date;
+            $row[] = $cat->waktu;
+            // $row[] = $cat->halaman_page;
+            if ($cat->attendanceStatus == 'Pending') {
+                $row[] = '<center> <div class="list-icons d-inline-flex">
+                <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+</svg></button>
+                                                <button title="Delete User" onclick="onNotApprove(' . $cat->id . ')" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+</svg></button>
+            </div>
+    </center>';
+            } else {
+                $row[] = 'Approved';
+            }
+
+
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->user->count_all(),
+            "recordsFiltered" => $this->user->count_filtered(),
+            "data" => $data,
+        );
+        echo json_encode($output);
+    }
+    public function approval($tipe, $id)
+    {
+        $this->load->model('M_absen', 'user');
+
+        if ($tipe == "Approved") {
+            $status = 'Present';
+        } else {
+            $status = 'Absent';
+        }
+        $date = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+        $this->user->update(
+            array(
+                'attendanceStatus'      => $status,
+            ),
+            array('id' => $id)
+        );
+        echo json_encode(array("status" => TRUE));
     }
 }
