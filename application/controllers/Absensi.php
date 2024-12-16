@@ -124,10 +124,19 @@ class Absensi extends CI_Controller
         }
     }
 
-    public function fetch_user()
+    public function fetch_user($tipe = null)
     {
         $this->load->model('M_absen', 'user');
+        $data_user = $this->user->data_user();
         $users = $this->user->get_user(); // Fetch all users from the database
+
+        if ($data_user && isset($data_user->jam_masuk) && isset($data_user->jam_keluar)) {
+            $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
+            $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
+        } else {
+            echo 'Error: Missing "jam_masuk" or "jam_keluar" data.';
+            return;
+        }
 
         if ($users) {
             // If using result_array(), users will be an array, even if there's only one user
@@ -147,9 +156,32 @@ class Absensi extends CI_Controller
                 ]);
             } else {
                 // Load the user table view and capture its output
-                $data['users'] = $users;
-                $tableHTML = $this->load->view('userTable', $data, TRUE);
+                if ($tipe == 'masuk') {
+                    $this->db->select('*'); // Fetch only these columns
+                    $this->db->from('tblattendance'); // Table name
+                    $this->db->where('username', $this->session->userdata('username'));
+                    $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+                    $this->db->where('TIME(waktu) <=', $jam_masuk_plus_two); // Check for records under jam_masuk_plus_two
+                    $users = $this->db->get()->result_array();
 
+                    $data['users'] = $users;
+                    $data['tipe'] = $tipe;
+                } else if ($tipe == 'pulang') {
+                    $this->db->select('*'); // Fetch only these columns
+                    $this->db->from('tblattendance'); // Table name
+                    $this->db->where('username', $this->session->userdata('username'));
+                    $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+                    $this->db->where('TIME(waktu) >=', $jam_keluar_plus_two); // Check for records under jam_keluar_plus_two
+                    $users = $this->db->get()->result_array();
+                    // return $query->result_array(); // Return the result as an array
+
+                    $data['users'] = $users;
+                    $data['tipe'] = $tipe;
+                } else {
+                    $data['users'] = $users;
+                    $data['tipe'] = $tipe;
+                }
+                $tableHTML = $this->load->view('userTable', $data, TRUE);
                 echo json_encode([
                     'status' => 'success',
                     'data' => $users,

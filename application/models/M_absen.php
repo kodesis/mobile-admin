@@ -54,7 +54,7 @@ class M_absen extends CI_Model
                             $tipe = 'Masuk';
                         } elseif ($currentTime->format('H:i:s') >= $startOfDay->format('H:i:s') && $currentTime->format('H:i:s') < $endOfDay->format('H:i:s')) {
                             // Between jam_masuk and jam_keluar, it is 'Keluar'
-                            $tipe = 'Keluar';
+                            $tipe = 'Telat/Keluar';
                         } elseif ($currentTime->format('H:i:s') >= $endOfDay->format('H:i:s')) {
                             // After jam_keluar, it is 'Pulang'
                             $tipe = 'Pulang';
@@ -110,7 +110,6 @@ class M_absen extends CI_Model
     {
         $this->db->select('*'); // Fetch only these columns
         $this->db->from('users'); // Table name
-        // $this->db->where('userImage !=', NULL);
         $this->db->where('username', $this->session->userdata('username'));
         $query = $this->db->get();
 

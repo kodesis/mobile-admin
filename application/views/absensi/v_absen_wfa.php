@@ -229,15 +229,85 @@
         xhr.send();
     }
 
+    function updateTableMasuk() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "fetch_user/masuk", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === "success") {
+                    students = response.data; // Store the student data
+                    labels = students.map(student => student.username);
+                    console.log(labels);
+
+                    document.getElementById("studentTableContainer").innerHTML = response.html;
+                } else if (response.status === "No Picture") {
+                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+
+                } else {
+                    console.error("Error:", response.message);
+                }
+            }
+        };
+
+        xhr.send();
+    }
+
+    function updateTablePulang() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "fetch_user/pulang", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === "success") {
+                    students = response.data; // Store the student data
+                    labels = students.map(student => student.username);
+                    console.log(labels);
+
+                    document.getElementById("studentTableContainer").innerHTML = response.html;
+                } else if (response.status === "No Picture") {
+                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+
+                } else {
+                    console.error("Error:", response.message);
+                }
+            }
+        };
+
+        xhr.send();
+    }
+
     function markAttendance(detectedFaces) {
         document.querySelectorAll("#studentTableContainer tr").forEach((row) => {
 
             const username = row.cells[0].innerText.trim();
+            <?php
 
+            date_default_timezone_set('Asia/Jakarta');
+            $current_time = new DateTime();
+            $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
+            $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+            ?>
             if (detectedFaces.includes(username)) {
                 if (isWithinRange) {
-                    row.cells[3].innerText = "present";
-                    row.cells[4].innerText = locationName;
+                    <?php
+                    if ($current_time <= $jam_masuk_plus_two || $current_time >= $jam_keluar_plus_two) {
+
+                    ?>
+                        row.cells[3].innerText = "present";
+                        row.cells[4].innerText = locationName;
+                    <?php
+                    } else {
+                    ?>
+                        row.cells[3].innerText = "Pending";
+                        row.cells[4].innerText = locationName;
+                    <?php
+                    }
+                    ?>
                 } else {
                     row.cells[3].innerText = "pending";
                     row.cells[4].innerText = "Di Luar";
@@ -486,39 +556,39 @@
         videoContainer.style.display = "none";
         stopWebcam();
     });
-</script>
-<?php
-if (empty($data_users)) {
-?>
-    <script>
-        const callOnceLocation1 = getLocation();
-    </script>
-<?php
-} else {
-    $current_time = new DateTime(); // Current time
-    $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-    $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
-?>
-    <script>
+    <?php
+    if (empty($data_users)) {
+    ?>
+        getLocation();
+    <?php
+    } else {
+        date_default_timezone_set('Asia/Jakarta');
+        $current_time = new DateTime();
+        $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+    ?>
         <?php if ($current_time <= $jam_masuk_plus_two) { ?>
             <?php if (empty($result1)) { ?>
                 console.log('ada1');
-                const callOnceLocation2 = getLocation(); // Call function
+                getLocation(); // Call function
             <?php } else { ?>
                 Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Masuk', 'warning');
+                updateTableMasuk(); // Call function
             <?php } ?>
         <?php } else if ($current_time >= $jam_keluar_plus_two) { ?>
             <?php if (empty($result2)) { ?>
                 console.log('ada2');
-                const callOnceLocation3 = getLocation(); // Call function
+                getLocation(); // Call function
             <?php } else { ?>
-                Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Keluar', 'warning');
+                Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Pulang', 'warning');
+                updateTablePulang(); // Call function
             <?php } ?>
         <?php } else { ?>
-            Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
+            getLocation(); // Call function
         <?php } ?>
-    </script>
-<?php } ?>
-
+    <?php } ?>
+    const currentTime = new Date("<?php echo $current_time->format('Y-m-d H:i:s'); ?>");
+    console.log('Current time:', currentTime);
+</script>
 <script src='<?= base_url() ?>resources/assets/javascript/active_link.js'></script>
 <!-- <script src='<?= base_url() ?>resources/assets/javascript/face_logics/script.js'></script> -->
