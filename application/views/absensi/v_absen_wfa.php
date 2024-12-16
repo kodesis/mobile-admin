@@ -486,41 +486,39 @@
         videoContainer.style.display = "none";
         stopWebcam();
     });
-    <?php
-    if (empty($cek_user)) {
-    ?>
-        const callOnceLocation = getLocation();
-        <?php
-    } else {
-        $current_time = new DateTime(); // Current time
-        $jam_masuk_plus_two = (new DateTime($cek_user['jam_masuk']))->modify('+2 hours');
-        $jam_keluar_plus_two = (new DateTime($cek_user['jam_keluar']))->modify('+2 hours');
-
-        $this->db->select('*'); // Fetch all columns
-        $this->db->from('tblattendance'); // Table name
-        $this->db->where('username', $this->session->userdata('username')); // Filter by username
-        $this->db->where('DATE(date)', date('Y-m-d')); // Add condition for today's date
-        $this->db->group_start(); // Start grouping conditions
-        $this->db->where('TIME(waktu) <=', $jam_masuk_plus_two); // Check for under jam_masuk_plus_two
-        $this->db->or_where('TIME(waktu) >=', $jam_keluar_plus_two); // Check for over jam_keluar_plus_two
-        $this->db->group_end(); // End grouping conditions
-        $query = $this->db->get(); // Execute the query
-
-        $result = $query->result_array(); // Fetch results
-
-        if (empty($result) || count($result) === 1) {
-        ?>
-            const callOnceLocation = getLocation();
-        <?php
-        } else {
-        ?>
-            Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
-    <?php
-        }
-    }
-    ?>
-
-    callOnceLocation();
 </script>
+<?php
+if (empty($data_users)) {
+?>
+    <script>
+        const callOnceLocation1 = getLocation();
+    </script>
+<?php
+} else {
+    $current_time = new DateTime(); // Current time
+    $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
+    $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+?>
+    <script>
+        <?php if ($current_time <= $jam_masuk_plus_two) { ?>
+            <?php if (empty($result1)) { ?>
+                console.log('ada1');
+                const callOnceLocation2 = getLocation(); // Call function
+            <?php } else { ?>
+                Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Masuk', 'warning');
+            <?php } ?>
+        <?php } else if ($current_time >= $jam_keluar_plus_two) { ?>
+            <?php if (empty($result2)) { ?>
+                console.log('ada2');
+                const callOnceLocation3 = getLocation(); // Call function
+            <?php } else { ?>
+                Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Keluar', 'warning');
+            <?php } ?>
+        <?php } else { ?>
+            Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
+        <?php } ?>
+    </script>
+<?php } ?>
+
 <script src='<?= base_url() ?>resources/assets/javascript/active_link.js'></script>
 <!-- <script src='<?= base_url() ?>resources/assets/javascript/face_logics/script.js'></script> -->

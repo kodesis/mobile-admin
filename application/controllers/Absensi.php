@@ -74,21 +74,46 @@ class Absensi extends CI_Controller
     }
     public function absen_wfa()
     {
-
-        $this->load->model(
-            'M_absen',
-            'user'
-        );
+        $this->load->model('M_absen', 'user');
         $a = $this->session->userdata('level');
         if (strpos($a, '401') !== false) {
             $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
             $data['user'] = $this->m_app->user_get_detail($this->session->userdata('nip'));
-
-
             $data['cek_user'] = $this->user->cek_user();
             $data['lokasi_absensi'] = $this->user->get_location();
-
             $data['data_user'] = $this->user->get_user();
+            $data['data_users'] = $this->user->data_user();
+
+            // Access properties using '->' because $cek_user is an object
+            $data_user = $this->user->data_user();
+
+            // Ensure $cek_user is not null and contains jam_masuk and jam_keluar
+            if ($data_user && isset($data_user->jam_masuk) && isset($data_user->jam_keluar)) {
+                $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
+                $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
+            } else {
+                echo 'Error: Missing "jam_masuk" or "jam_keluar" data.';
+                return;
+            }
+
+            $this->db->select('*');
+            $this->db->from('tblattendance');
+            $this->db->where('username', $this->session->userdata('username')); // Filter by username
+            $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+            $this->db->where('TIME(waktu) <=', $jam_masuk_plus_two); // Check for records under jam_masuk_plus_two
+            $query = $this->db->get(); // Execute the query
+            $result1 = $query->result_array(); // Fetch results
+
+            $this->db->select('*');
+            $this->db->from('tblattendance');
+            $this->db->where('username', $this->session->userdata('username')); // Filter by username
+            $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
+            $this->db->where('TIME(waktu) >=', $jam_keluar_plus_two); // Check for records under jam_keluar_plus_two
+            $query = $this->db->get(); // Execute the query
+            $result2 = $query->result_array(); // Fetch results
+
+            $data['result1'] = $result1;
+            $data['result2'] = $result2;
 
             $this->load->view('Layouts/v_header', $data);
             $this->load->view('absensi/v_absen_wfa', $data);
@@ -98,6 +123,7 @@ class Absensi extends CI_Controller
             redirect('home');
         }
     }
+
     public function fetch_user()
     {
         $this->load->model('M_absen', 'user');

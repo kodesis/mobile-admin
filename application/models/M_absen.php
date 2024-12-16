@@ -106,4 +106,15 @@ class M_absen extends CI_Model
         // return $query->result_array(); // Return the result as an array
         return $query->result(); // Return the result as an array
     }
+    public function data_user()
+    {
+        $this->db->select('*'); // Fetch only these columns
+        $this->db->from('users'); // Table name
+        // $this->db->where('userImage !=', NULL);
+        $this->db->where('username', $this->session->userdata('username'));
+        $query = $this->db->get();
+
+        // return $query->result_array(); // Return the result as an array
+        return $query->row(); // Return the result as an array
+    }
 }
