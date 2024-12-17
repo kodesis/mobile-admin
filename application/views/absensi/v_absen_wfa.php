@@ -243,7 +243,8 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
-
+                    const videoContainer = document.querySelector(".video-container");
+                    videoContainer.style.display('none');
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
                     console.log(labels);
@@ -270,6 +271,8 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
+                    const videoContainer = document.querySelector(".video-container");
+                    videoContainer.style.display('none');
 
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
@@ -297,6 +300,8 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
+                    const videoContainer = document.querySelector(".video-container");
+                    videoContainer.style.display('none');
 
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);

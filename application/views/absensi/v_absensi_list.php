@@ -31,6 +31,20 @@
         max-width: 150px;
         /* Adjust width to your preference */
     }
+
+    .badge {
+        /* padding: 6px 9px !important; */
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        margin-right: 2px;
+        transform: translateY(-2px);
+        border: 0px !important;
+        border-radius: 8px;
+        z-index: 2;
+        /* position: absolute; */
+        right: 15px;
+        /* margin-top: 16px !important; */
+    }
 </style>
 <div id="page">
     <?php include APPPATH . '/views/v_nav.php' ?>
@@ -50,11 +64,18 @@
                     <a href="#" data-active data-bs-toggle="collapse" data-bs-target="#tab-5" onclick="refreshTable1()">User</a>
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-6" onclick="refreshTable2()">Tim</a>
                     <?php
-                    if ($this->session->userdata('level_jabatan') == 3) {
+                    // if ($this->session->userdata('level_jabatan') == 3) {
                     ?>
-                        <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7" onclick="refreshTable3()">Approval</a>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7" onclick="refreshTable3()">Approval
+                        <?php
+                        if (!empty($notif)) {
+                        ?>
+                            <span class="badge gradient-red color-white"><?= $notif ?></span>
+                        <?php
+                        }
+                        ?></a>
                     <?php
-                    }
+                    // }
                     ?>
                     <!-- <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7">Tab 7</a> -->
                 </div>

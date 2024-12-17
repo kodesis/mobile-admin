@@ -367,6 +367,11 @@ class Absensi extends CI_Controller
             $search = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
             $data['user'] = $this->m_app->user_get_detail($this->session->userdata('nip'));
 
+            $this->db->select('*'); // Fetch only these columns
+            $this->db->from('tblattendance'); // Table name
+            $this->db->where('attendanceStatus', 'Pending');
+            $data['notif'] = $this->db->get()->num_rows();
+
             $this->load->view('Layouts/v_header', $data);
             $this->load->view('absensi/v_absensi_list', $data);
             $this->load->view('Layouts/v_footer');
