@@ -390,6 +390,13 @@ class Absensi extends CI_Controller
             $row = array();
             $row[] = $no;
             $row[] = $cat->nip;
+            $maxLength = 10; // Define the max length
+            if (strlen($cat->nama) > $maxLength) {
+                $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
+            } else {
+                $truncated = $cat->nama;
+            }
+            $row[] = $truncated;
             $row[] = $cat->nama;
             $row[] = $cat->attendanceStatus;
             $row[] = $cat->lokasiAttendance;
@@ -397,8 +404,11 @@ class Absensi extends CI_Controller
             $row[] = $cat->date;
             $row[] = $cat->waktu;
             // $row[] = $cat->halaman_page;
-            if ($cat->attendanceStatus == 'Pending') {
-                $row[] = '<center> <div class="list-icons d-inline-flex">
+            if (
+                $this->session->userdata('level_jabatan') == 3
+            ) {
+                if ($cat->attendanceStatus == 'Pending') {
+                    $row[] = '<center> <div class="list-icons d-inline-flex">
                 <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
   <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
 </svg></button>
@@ -407,8 +417,11 @@ class Absensi extends CI_Controller
 </svg></button>
             </div>
     </center>';
+                } else {
+                    $row[] = 'Approved';
+                }
             } else {
-                $row[] = 'Approved';
+                $row[] = '';
             }
 
 
@@ -419,6 +432,123 @@ class Absensi extends CI_Controller
             "draw" => $_POST['draw'],
             "recordsTotal" => $this->user->count_all(),
             "recordsFiltered" => $this->user->count_filtered(),
+            "data" => $data,
+        );
+        echo json_encode($output);
+    }
+    public function ajax_list2()
+    {
+        $this->load->model('M_absen', 'user');
+
+        $list = $this->user->get_datatables2();
+        $data = array();
+        $crs = "";
+        $no = $_POST['start'];
+
+        foreach ($list as $cat) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $cat->nip;
+            $maxLength = 10; // Define the max length
+            if (strlen($cat->nama) > $maxLength) {
+                $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
+            } else {
+                $truncated = $cat->nama;
+            }
+            $row[] = $truncated;
+            $row[] = $cat->nama;
+            $row[] = $cat->attendanceStatus;
+            $row[] = $cat->lokasiAttendance;
+            $row[] = $cat->tipe;
+            $row[] = $cat->date;
+            $row[] = $cat->waktu;
+            // $row[] = $cat->halaman_page;
+            if ($this->session->userdata('level_jabatan') == 3) {
+                if ($cat->attendanceStatus == 'Pending') {
+                    $row[] = '<center> <div class="list-icons d-inline-flex">
+                <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+</svg></button>
+                                                <button title="Delete User" onclick="onNotApprove(' . $cat->id . ')" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+</svg></button>
+            </div>
+    </center>';
+                } else {
+                    $row[] = 'Approved';
+                }
+            } else {
+                $row[] = '';
+            }
+
+
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->user->count_all2(),
+            "recordsFiltered" => $this->user->count_filtered2(),
+            "data" => $data,
+        );
+        echo json_encode($output);
+    }
+
+    public function ajax_list3()
+    {
+        $this->load->model('M_absen', 'user');
+
+        $list = $this->user->get_datatables3();
+        $data = array();
+        $crs = "";
+        $no = $_POST['start'];
+
+        foreach ($list as $cat) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $cat->nip;
+            $maxLength = 10; // Define the max length
+            if (strlen($cat->nama) > $maxLength) {
+                $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
+            } else {
+                $truncated = $cat->nama;
+            }
+            $row[] = $truncated;
+            $row[] = $cat->nama;
+            $row[] = $cat->attendanceStatus;
+            $row[] = $cat->lokasiAttendance;
+            $row[] = $cat->tipe;
+            $row[] = $cat->date;
+            $row[] = $cat->waktu;
+            // $row[] = $cat->halaman_page;
+            if ($this->session->userdata('level_jabatan') == 3) {
+                if ($cat->attendanceStatus == 'Pending') {
+                    $row[] = '<center> <div class="list-icons d-inline-flex">
+                <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+</svg></button>
+                                                <button title="Delete User" onclick="onNotApprove(' . $cat->id . ')" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+</svg></button>
+            </div>
+    </center>';
+                } else {
+                    $row[] = 'Approved';
+                }
+            } else {
+                $row[] = '';
+            }
+
+
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->user->count_all3(),
+            "recordsFiltered" => $this->user->count_filtered3(),
             "data" => $data,
         );
         echo json_encode($output);

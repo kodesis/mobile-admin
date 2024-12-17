@@ -49,13 +49,6 @@
                 <div class="tab-controls tabs-small tabs-rounded" data-highlight="bg-blue-dark">
                     <a href="#" data-active data-bs-toggle="collapse" data-bs-target="#tab-5" onclick="refreshTable1()">User</a>
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-6" onclick="refreshTable2()">Tim</a>
-                    <?php
-                    if ($this->session->userdata('level_jabatan') == 3) {
-                    ?>
-                        <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7" onclick="refreshTable3()">Approval</a>
-                    <?php
-                    }
-                    ?>
                     <!-- <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7">Tab 7</a> -->
                 </div>
                 <div class="clearfix mb-3"></div>
@@ -152,50 +145,7 @@
                     </div>
                 </div>
                 <div data-bs-parent="#tab-group-2" class="collapse" id="tab-7">
-                    <div class="content" style="cursor: pointer;  margin: 0;">
-                        <table id="table3" class="display nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th style="text-align:left;">No.</th>
-                                    <th style="text-align:left;">Nip</th>
-                                    <th>Nama</th>
-                                    <th>Full Name</th>
-                                    <th>Attendance Status</th>
-                                    <th>Lokasi</th>
-                                    <th>Tipe</th>
-                                    <th>Tanggal</th>
-                                    <th>Waktu</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="text-align:left;">2</td>
-                                    <td>Tiger</td>
-                                    <td>Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011-04-25</td>
-                                    <td>$320,800</td>
-                                    <td>5421</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nip</th>
-                                    <th>Nama</th>
-                                    <th>Attendance Status</th>
-                                    <th>Lokasi</th>
-                                    <th>Tipe</th>
-                                    <th>Tanggal</th>
-                                    <th>Waktu</th>
-                                    <th>Status</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                    <img class="img-fluid rounded-sm mt-2" src="images/pictures/28.jpg" alt="img">
                 </div>
             </div>
         </div>
@@ -353,10 +303,5 @@
     function refreshTable2() {
 
         $('#table2').DataTable().ajax.reload();
-    }
-
-    function refreshTable3() {
-
-        $('#table3').DataTable().ajax.reload();
     }
 </script>

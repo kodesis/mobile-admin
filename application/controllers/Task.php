@@ -387,7 +387,9 @@ class Task extends CI_Controller
   public function activity_comment()
   {
     if (isset($_FILES['file'])) {
-
+      // Initialize the arrays
+      $arr_att = [];
+      $arr_name = [];
       $files = $_FILES;
       $cpt = count($_FILES['file']['name']);
 
@@ -396,7 +398,8 @@ class Task extends CI_Controller
         $name = time() . $files['file']['name'][$i];
         $name_xx = $files['file']['name'][$i];
 
-        $ext = end((explode(".", $name_xx)));
+        $parts = explode(".", $name_xx); // Split the string into parts
+        $ext = end($parts); // Get the last part of the array
         $att_name = time() . '.' . $ext;
 
         $_FILES['file']['name'] = $name;
@@ -422,7 +425,7 @@ class Task extends CI_Controller
         foreach ($phone_x as $k) { //member card kirim ke wa
           $get_user = $this->db->get_where('users', ['nip' => $k])->row_array();
           $task_name = $get_task_detail['task_name'];
-          $nama_member = $get_user["nama"];
+          // $nama_member = $get_user["nama"];
           $comment = $this->input->post("comment");
           $nama_session = $this->session->userdata('nama');
           $msg = "There's a new comment\nCard Name : *$task_name*\nComment : *$comment*\n\nComment from :  *$nama_session*";

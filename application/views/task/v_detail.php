@@ -149,13 +149,13 @@
                   <ul>
                     <?php foreach ($att_xx as $x) {
 
-                    //   if (file_exists('upload/task_comment/' . $x)) {
-                    //     $url = base_url('upload/task_comment/' . $x);
-                    //   } else {
-                    //     $url = base_url('upload/card_task/' . $x);
-                    //   }
-                    
-                    $array = explode('.', $x);
+                      //   if (file_exists('upload/task_comment/' . $x)) {
+                      //     $url = base_url('upload/task_comment/' . $x);
+                      //   } else {
+                      //     $url = base_url('upload/card_task/' . $x);
+                      //   }
+
+                      $array = explode('.', $x);
                       $extension = end($array);
                       if ($extension == "png" || $extension == "jpg" || $extension == "jpeg") {
                     ?>
@@ -249,14 +249,14 @@
                   <?php
                   $i = 1;
                   foreach (explode(';', $x->attachment_name) as $xx) {
-                      $array = explode('.', $xx);
-                      $extension = end($array);
-                      if ($extension == "png" || $extension == "jpg" || $extension == "jpeg") {
+                    $array = explode('.', $xx);
+                    $extension = end($array);
+                    if ($extension == "png" || $extension == "jpg" || $extension == "jpeg") {
                   ?>
-                    <a style="color: black;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                      File <?= $i++ ?> ||
-                    </a>
-                    <!-- Modal -->
+                      <a style="color: black;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        File <?= $i++ ?> ||
+                      </a>
+                      <!-- Modal -->
                       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
@@ -273,11 +273,11 @@
                           </div>
                         </div>
                       </div>
-                  <?php } else { ?>
-                    <a style="color: black;" href="https://moc.mlejitoffice.id/upload/task_comment/<?= $xx ?>" download onclick="PageReload()">
-                      File <?= $i++ ?> ||
-                    </a>
-                  <?php 
+                    <?php } else { ?>
+                      <a style="color: black;" href="https://moc.mlejitoffice.id/upload/task_comment/<?= $xx ?>" download onclick="PageReload()">
+                        File <?= $i++ ?> ||
+                      </a>
+                  <?php
                     }
                   } ?>
                 </b>
