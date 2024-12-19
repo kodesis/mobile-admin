@@ -125,6 +125,11 @@
                 <span>Data Photo</span>
                 <i class="fa fa-angle-right"></i>
             </a>
+            <!-- <a id="nav-welcome" href="<?= base_url('absensi/lokasi') ?>">
+                <i class="fa-solid fa-list gradient-blue color-white"></i>
+                <span>Data Lokasi</span>
+                <i class="fa fa-angle-right"></i>
+            </a> -->
             <!-- <a id="nav-welcome" href="<?= base_url('absensi/user') ?>">
                 <i class="fa-solid fa-plus gradient-blue color-white"></i>
                 <span>User List</span>

@@ -65,6 +65,7 @@ class Auth extends CI_Controller
                 $this->session->set_userdata('kd_agent', $data->kd_agent);
                 $this->session->set_userdata('level_jabatan', $data->level_jabatan);
                 $this->session->set_userdata('bagian', $data->bagian);
+                $this->session->set_userdata('id_lokasi_presensi', $data->id_lokasi_presensi);
                 $this->session->set_userdata('kode_nama', $kod);
                 redirect('home');
             } else {

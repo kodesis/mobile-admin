@@ -70,7 +70,7 @@
                 <?php } ?>
               </div>
 
-              <?= preg_match("/$nip/i", $x->read) ? "" : "<span class='badge gradient-yellow color-white'>New</span>"; ?>
+              <?= preg_match("/$nip/i", $x->read ?? '') ? "" : "<span class='badge gradient-yellow color-white'>New</span>"; ?>
               <?php
               if ($x->activity == '1' && $x->due_date > date('Y-m-d')) {
                 echo "<span class='badge gradient-blue color-white'>Open</span>";
@@ -82,7 +82,9 @@
               ?>
 
               <div class="text-start">
-                <p class="mb-0 my-2" style="font-weight: <?= preg_match("/$nip/i", $x->read) ? '' : 'bolder' ?>; cursor:pointer" onclick="location.href='<?= base_url('task/task_view/' . $this->uri->segment(3) . '/' . $x->id_detail) ?>'">
+                <p class="mb-0 my-2"
+                  style="font-weight: <?= preg_match("/$nip/i", $x->read ?? '') ? '' : 'bolder' ?>; cursor:pointer"
+                  onclick="location.href='<?= base_url('task/task_view/' . $this->uri->segment(3) . '/' . $x->id_detail) ?>'">
                   <?php
                   $responsible = $this->db->get_where('users', ['nip' => $x->responsible])->row_array();
                   ?>
@@ -91,7 +93,7 @@
               </div>
               <div class="d-flex">
                 <div class="flex-grow-1">
-                  <p class="mb-n1" style="font-weight: <?= preg_match("/$nip/i", $x->read) ? '' : 'bolder' ?>; cursor:pointer" onclick="location.href='<?= base_url('task/task_view/' . $this->uri->segment(3) . '/' . $x->id_detail) ?>'"><?= $x->task_name ?></p>
+                  <p class="mb-n1" style="font-weight: <?= preg_match("/$nip/i", $x->read ?? '') ? '' : 'bolder' ?>; cursor:pointer" onclick="location.href='<?= base_url('task/task_view/' . $this->uri->segment(3) . '/' . $x->id_detail) ?>'"><?= $x->task_name ?></p>
                 </div>
               </div>
             </div>

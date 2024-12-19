@@ -105,13 +105,15 @@
     const locations = [
         <?php
         if ($lokasi_absensi) {
-            foreach ($lokasi_absensi as $l) { ?> {
-                    name: "<?= addslashes($l['nama_lokasi']) ?>", // Ensure the name is properly escaped and quoted
-                    latitude: <?= $l['latitude'] ?>,
-                    longitude: <?= $l['longitude'] ?>,
-                    radius: <?= $l['radius'] ?> // Radius in kilometers
-                },
+            foreach ($lokasi_absensi as $l) {
+                if ($l['id'] == $this->session->userdata('id_lokasi_presensi')) { ?> {
+                        name: "<?= addslashes($l['nama_lokasi']) ?>", // Ensure the name is properly escaped and quoted
+                        latitude: <?= $l['latitude'] ?>,
+                        longitude: <?= $l['longitude'] ?>,
+                        radius: <?= $l['radius'] ?> // Radius in kilometers
+                    },
             <?php }
+            }
         } else { ?> {
                 name: "Graha Dirgantara",
                 latitude: -6.2559536,

@@ -106,8 +106,8 @@ class Task extends CI_Controller
             $sqlx = "SELECT task_detail.read FROM task_detail WHERE id_detail ='$id_detail'";
             $queryxx = $this->db->query($sqlx);
             $resultx = $queryxx->row();
-            $kalimat = $resultx->read;
-            if (preg_match("/$nip/i", $kalimat)) {
+            $kalimat = $resultx ? $resultx->read : ''; // Ensure $kalimat is always a string
+            if (preg_match("/$nip/i", $kalimat ?? '')) {
             } else {
               $kalimat1 = $kalimat . ' ' . $nip;
               $data_update11  = array(
@@ -124,8 +124,8 @@ class Task extends CI_Controller
             $id_task = $this->uri->segment(3);
             $sql = "SELECT task.read FROM task WHERE id ='$id_task'";
             $result = $this->db->query($sql)->row();
-            $kalimat = $result->read;
-            if (preg_match("/$nip/i", $kalimat)) {
+            $kalimat = $result ? $result->read : ''; // Ensure $kalimat is always a string
+            if (preg_match("/$nip/i", $kalimat ?? '')) {
             } else {
               $kalimat1 = $kalimat . ' ' . $nip;
               $update  = array(
@@ -288,7 +288,7 @@ class Task extends CI_Controller
           $nama_file[] = str_replace(' ', '', time() . '_' . $_FILES['attachment']['name'][$xx]);
         }
       } else {
-        $nama_file = null;
+        $nama_file = [];
       }
 
       $file_i = implode(';', $nama_file);
@@ -356,7 +356,7 @@ class Task extends CI_Controller
           $nama_file[] = str_replace(' ', '', time() . '_' . $_FILES['attachment']['name'][$xx]);
         }
       } else {
-        $nama_file = null;
+        $nama_file = [];
       }
 
       $file_i = implode(';', $nama_file);
