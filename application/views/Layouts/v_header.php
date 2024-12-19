@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/fonts/css/fontawesome-all.min.css" />
     <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>assets/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>assets/images/kodesis_kotak.png" />
     <!-- sweetalert -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/vendor/sweetalert2/css/sweetalert2.min.css">
     <!-- Select2 -->
