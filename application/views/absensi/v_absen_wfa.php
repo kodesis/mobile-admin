@@ -63,7 +63,7 @@
                         <button hidden id="endAttendance" class="add">END Attendance Taking</button>
                     </div>
 
-                    <div class="video-container">
+                    <div id="konten_video" class="video-container">
                         <video id="video" class="video-class" width="320" height="240" autoplay muted></video>
                         <canvas id="overlay"></canvas>
                     </div>
@@ -245,8 +245,10 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
-                    const videoContainer = document.querySelector(".video-container");
-                    videoContainer.style.display('none');
+
+                    const videoDiv = document.getElementById("konten_video");
+                    videoDiv.style.display = 'none'; // Hide the div
+
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
                     console.log(labels);
@@ -273,8 +275,9 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
-                    const videoContainer = document.querySelector(".video-container");
-                    videoContainer.style.display('none');
+
+                    const videoDiv = document.getElementById("konten_video");
+                    videoDiv.style.display = 'none'; // Hide the div
 
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
@@ -302,8 +305,9 @@
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === "success") {
                     document.getElementById("studentTableContainer").innerHTML = response.html;
-                    const videoContainer = document.querySelector(".video-container");
-                    videoContainer.style.display('none');
+
+                    const videoDiv = document.getElementById("konten_video");
+                    videoDiv.style.display = 'none'; // Hide the div
 
                     students = response.data; // Store the student data
                     labels = students.map(student => student.username);
