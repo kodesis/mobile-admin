@@ -382,7 +382,6 @@
                 const videoContainer = document.querySelector(".video-container");
                 videoContainer.style.display = "none";
                 stopWebcam();
-                sendAttendanceDataToServer();
 
             }
         });
@@ -515,6 +514,7 @@
 
                 console.log(detectedFaces); // Here you'll see the registration numbers
                 markAttendance(detectedFaces);
+                sendAttendanceDataToServer();
 
                 results.forEach((result, i) => {
                     const box = resizedDetections[i].detection.box;
@@ -532,9 +532,9 @@
     let isSubmitting = false; // Flag to track if data is being submitted
 
     function sendAttendanceDataToServer() {
-        if (isSubmitting) return; // Prevent multiple submissions
+        // if (isSubmitting) return; // Prevent multiple submissions
 
-        isSubmitting = true; // Set the flag to prevent re-submission
+        // isSubmitting = true; // Set the flag to prevent re-submission
 
         const attendanceData = [];
 
@@ -555,6 +555,7 @@
             lokasiAttendance,
         });
 
+        console.log(attendanceData);
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "recordAttendance", true);
         xhr.setRequestHeader("Content-Type", "application/json");
