@@ -64,18 +64,18 @@
                     <a href="#" data-active data-bs-toggle="collapse" data-bs-target="#tab-5" onclick="refreshTable1()">User</a>
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-6" onclick="refreshTable2()">Tim</a>
                     <?php
-                    // if ($this->session->userdata('level_jabatan') == 3) {
+                    if ($this->session->userdata('level_jabatan') == 3) {
                     ?>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7" onclick="refreshTable3()">Approval
-                        <?php
-                        if (!empty($notif)) {
-                        ?>
-                            <span class="badge gradient-red color-white"><?= $notif ?></span>
-                        <?php
-                        }
-                        ?></a>
+                        <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7" onclick="refreshTable3()">Approval
+                            <?php
+                            if (!empty($notif)) {
+                            ?>
+                                <span class="badge gradient-red color-white"><?= $notif ?></span>
+                            <?php
+                            }
+                            ?></a>
                     <?php
-                    // }
+                    }
                     ?>
                     <!-- <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7">Tab 7</a> -->
                 </div>
