@@ -514,7 +514,6 @@
 
                 console.log(detectedFaces); // Here you'll see the registration numbers
                 markAttendance(detectedFaces);
-                sendAttendanceDataToServer();
 
                 results.forEach((result, i) => {
                     const box = resizedDetections[i].detection.box;
@@ -525,6 +524,8 @@
                 });
 
             }, 100);
+
+            sendAttendanceDataToServer();
         });
 
     }
