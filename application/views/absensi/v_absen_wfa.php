@@ -550,7 +550,8 @@
         const username = document.getElementById('username').innerText;
         const nip = document.getElementById('nip').innerText;
         const nama = document.getElementById('nama').innerText;
-        const attendanceStatus = document.getElementById('absent').innerText;
+        // const attendanceStatus = document.getElementById('absent').innerText;
+        const attendanceStatus = AttendanceStatus;
         // const lokasiAttendance = document.getElementById('lokasi').innerText;
         const lokasiAttendance = locationName;
         const tanggalAttendance = document.getElementById('tanggalonly').innerText;
