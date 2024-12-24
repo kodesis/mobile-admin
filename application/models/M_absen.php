@@ -4,9 +4,9 @@ class M_absen extends CI_Model
 {
 
     var $table = 'tblattendance';
-    var $column_order = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
-    var $column_search = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
-    var $order = array('date' => 'desc'); // default order 
+    var $column_order = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
+    var $column_search = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
+    var $order = array('date' => 'desc', 'waktu' => 'desc'); // default order 
 
     function _get_datatables_query()
     {
@@ -40,7 +40,10 @@ class M_absen extends CI_Model
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($this->order)) {
             $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
+            // $this->db->order_by(key($order), $order[key($order)]);
+            foreach ($order as $key => $value) {
+                $this->db->order_by($key, $value);
+            }
         }
     }
 
@@ -71,9 +74,9 @@ class M_absen extends CI_Model
 
 
     var $table2 = 'tblattendance';
-    var $column_order2 = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
-    var $column_search2 = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
-    var $order2 = array('date' => 'desc'); // default order 
+    var $column_order2 = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
+    var $column_search2 = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
+    var $order2 = array('date' => 'desc', 'waktu' => 'desc'); // default order 
 
     function _get_datatables_query2()
     {
@@ -108,7 +111,10 @@ class M_absen extends CI_Model
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($this->order)) {
             $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
+            // $this->db->order_by(key($order), $order[key($order)]);
+            foreach ($order as $key => $value) {
+                $this->db->order_by($key, $value);
+            }
         }
     }
 
@@ -139,9 +145,9 @@ class M_absen extends CI_Model
 
 
     var $table3 = 'tblattendance';
-    var $column_order3 = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
-    var $column_search3 = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
-    var $order3 = array('date' => 'desc'); // default order 
+    var $column_order3 = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable orderable
+    var $column_search3 = array('tblattendance.nama', 'tblattendance.date', 'attendanceStatus', 'tblattendance.nip', 'tblattendance.nama', 'attendanceStatus', 'lokasiAttendance', 'tipe', 'date', 'waktu'); //set column field database for datatable searchable 
+    var $order3 = array('date' => 'desc', 'waktu' => 'desc'); // default order 
 
     function _get_datatables_query3()
     {
@@ -177,7 +183,10 @@ class M_absen extends CI_Model
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($this->order)) {
             $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
+            // $this->db->order_by(key($order), $order[key($order)]);
+            foreach ($order as $key => $value) {
+                $this->db->order_by($key, $value);
+            }
         }
     }
 
