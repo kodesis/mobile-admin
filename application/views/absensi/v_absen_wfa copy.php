@@ -337,7 +337,7 @@
         date_default_timezone_set('Asia/Jakarta');
         $current_time = new DateTime();
         $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar));
         ?>
         if (detectedFaces.includes(username)) {
             if (isWithinRange) {
@@ -388,7 +388,6 @@
             const videoContainer = document.querySelector(".video-container");
             videoContainer.style.display = "none";
             stopWebcam();
-            sendAttendanceDataToServer();
 
         }
         // });
@@ -522,6 +521,8 @@
                 console.log(detectedFaces); // Here you'll see the registration numbers
                 markAttendance(detectedFaces);
 
+                sendAttendanceDataToServer();
+
                 results.forEach((result, i) => {
                     const box = resizedDetections[i].detection.box;
                     const drawBox = new faceapi.draw.DrawBox(box, {
@@ -643,7 +644,7 @@
         date_default_timezone_set('Asia/Jakarta');
         $current_time = new DateTime();
         $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar));
     ?>
         <?php if ($current_time <= $jam_masuk_plus_two) { ?>
             <?php if (empty($result1)) { ?>
