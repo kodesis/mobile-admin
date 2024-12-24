@@ -254,7 +254,6 @@ class M_absen extends CI_Model
                         $startOfDay = new DateTime($jam->jam_masuk); // Assuming format is H:i:s
                         $endOfDay = new DateTime($jam->jam_keluar);
                         $startOfDay->modify('+2 hours');
-                        $endOfDay->modify('+2 hours');
 
                         // Debug outputs
                         // echo "Current Time: " . $currentTime->format('H:i:s') . "<br>";
