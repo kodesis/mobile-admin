@@ -102,6 +102,7 @@
 <script>
     let isWithinRange = false;
     let locationName = null;
+    let AttendanceStatus = 'Absent';
     const locations = [
         <?php
         if ($lokasi_absensi) {
@@ -345,11 +346,13 @@
                 ?>
                     document.getElementById('absent').innerText = "Present"; // Update attendance status
                     document.getElementById('lokasi').innerText = locationName; // Update location
+                    AttendanceStatus = "Present";
                 <?php
                 } else {
                 ?>
                     document.getElementById('absent').innerText = "Pending"; // Update attendance status
                     document.getElementById('lokasi').innerText = locationName; // Update location
+                    AttendanceStatus = "Pending";
                 <?php
                 }
                 ?>
@@ -357,6 +360,8 @@
                 document.getElementById('absent').innerText = "Pending"; // Update attendance status
                 document.getElementById('lokasi').innerText = "Di Luar"; // Update location
                 locationName = "Di Luar";
+                AttendanceStatus = "Pending";
+
             }
             const currentDate = new Date(); // Get the current date and time (UTC by default)
 
