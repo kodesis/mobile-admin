@@ -389,12 +389,27 @@ class Absensi extends CI_Controller
         $data = array();
         $crs = "";
         $no = $_POST['start'];
+        $months = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'Mei',
+            'Jun',
+            'Jul',
+            'Agu',
+            'Sep',
+            'Okt',
+            'Nov',
+            'Des'
+        ];
 
         foreach ($list as $cat) {
+            $date = new DateTime($cat->date);
+
             $no++;
             $row = array();
-            $row[] = $no;
-            $row[] = $cat->nip;
+            // $row[] = $no;
             $maxLength = 10; // Define the max length
             if (strlen($cat->nama) > $maxLength) {
                 $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
@@ -402,32 +417,20 @@ class Absensi extends CI_Controller
                 $truncated = $cat->nama;
             }
             $row[] = $truncated;
+
+            $monthIndex = (int) $date->format('n') - 1; // Get the month index (0-based)
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
+            $row[] = $cat->attendanceStatus;
+
+            $row[] = $cat->nip;
             $row[] = $cat->nama;
             $row[] = $cat->attendanceStatus;
             $row[] = $cat->lokasiAttendance;
             $row[] = $cat->tipe;
-            $row[] = $cat->date;
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
             // $row[] = $cat->halaman_page;
-            if (
-                $this->session->userdata('level_jabatan') == 3
-            ) {
-                if ($cat->attendanceStatus == 'Pending') {
-                    $row[] = '<center> <div class="list-icons d-inline-flex">
-                <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-</svg></button>
-                                                <button title="Delete User" onclick="onNotApprove(' . $cat->id . ')" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-</svg></button>
-            </div>
-    </center>';
-                } else {
-                    $row[] = 'Approved';
-                }
-            } else {
-                $row[] = '';
-            }
+
 
 
             $data[] = $row;
@@ -449,12 +452,26 @@ class Absensi extends CI_Controller
         $data = array();
         $crs = "";
         $no = $_POST['start'];
-
+        $months = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'Mei',
+            'Jun',
+            'Jul',
+            'Agu',
+            'Sep',
+            'Okt',
+            'Nov',
+            'Des'
+        ];
         foreach ($list as $cat) {
+            $date = new DateTime($cat->date);
+
             $no++;
             $row = array();
-            $row[] = $no;
-            $row[] = $cat->nip;
+            // $row[] = $no;
             $maxLength = 10; // Define the max length
             if (strlen($cat->nama) > $maxLength) {
                 $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
@@ -462,30 +479,20 @@ class Absensi extends CI_Controller
                 $truncated = $cat->nama;
             }
             $row[] = $truncated;
+
+            $monthIndex = (int) $date->format('n') - 1; // Get the month index (0-based)
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
+            $row[] = $cat->attendanceStatus;
+
+            $row[] = $cat->nip;
             $row[] = $cat->nama;
             $row[] = $cat->attendanceStatus;
             $row[] = $cat->lokasiAttendance;
             $row[] = $cat->tipe;
-            $row[] = $cat->date;
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
             // $row[] = $cat->halaman_page;
-            if ($this->session->userdata('level_jabatan') == 3) {
-                if ($cat->attendanceStatus == 'Pending') {
-                    $row[] = '<center> <div class="list-icons d-inline-flex">
-                <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-</svg></button>
-                                                <button title="Delete User" onclick="onNotApprove(' . $cat->id . ')" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-</svg></button>
-            </div>
-    </center>';
-                } else {
-                    $row[] = 'Approved';
-                }
-            } else {
-                $row[] = '';
-            }
+
 
 
             $data[] = $row;
@@ -509,11 +516,27 @@ class Absensi extends CI_Controller
         $crs = "";
         $no = $_POST['start'];
 
+        $months = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'Mei',
+            'Jun',
+            'Jul',
+            'Agu',
+            'Sep',
+            'Okt',
+            'Nov',
+            'Des'
+        ];
+
         foreach ($list as $cat) {
+            $date = new DateTime($cat->date);
+
             $no++;
             $row = array();
-            $row[] = $no;
-            $row[] = $cat->nip;
+            // $row[] = $no;
             $maxLength = 10; // Define the max length
             if (strlen($cat->nama) > $maxLength) {
                 $truncated = substr($cat->nama, 0, strrpos(substr($cat->nama, 0, $maxLength), ' ')) . '';
@@ -521,11 +544,17 @@ class Absensi extends CI_Controller
                 $truncated = $cat->nama;
             }
             $row[] = $truncated;
+
+            $monthIndex = (int) $date->format('n') - 1; // Get the month index (0-based)
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
+            $row[] = $cat->attendanceStatus;
+
+            $row[] = $cat->nip;
             $row[] = $cat->nama;
             $row[] = $cat->attendanceStatus;
             $row[] = $cat->lokasiAttendance;
             $row[] = $cat->tipe;
-            $row[] = $cat->date;
+            $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
             // $row[] = $cat->halaman_page;
             if ($this->session->userdata('level_jabatan') == 3) {

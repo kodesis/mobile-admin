@@ -85,16 +85,17 @@
                         <table id="table1" class="display nowrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th style="text-align:left;">No.</th>
-                                    <th style="text-align:left;">Nip</th>
-                                    <th>Nama</th>
+                                    <th style="text-align:left;">Nama</th>
+                                    <th style="text-align:left;">Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
                                     <th>Full Name</th>
-                                    <th>Attendance Status</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,15 +113,17 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Nip</th>
                                     <th>Nama</th>
-                                    <th>Attendance Status</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
+                                    <th>Full Name</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </tfoot>
                         </table>
@@ -131,16 +134,17 @@
                         <table id="table2" class="display nowrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th style="text-align:left;">No.</th>
-                                    <th style="text-align:left;">Nip</th>
-                                    <th>Nama</th>
+                                    <th style="text-align:left;">Nama</th>
+                                    <th style="text-align:left;">Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
                                     <th>Full Name</th>
-                                    <th>Attendance Status</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Status</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,15 +162,17 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Nip</th>
                                     <th>Nama</th>
-                                    <th>Attendance Status</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
+                                    <th>Full Name</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Status</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </tfoot>
                         </table>
@@ -177,16 +183,17 @@
                         <table id="table3" class="display nowrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th style="text-align:left;">No.</th>
-                                    <th style="text-align:left;">Nip</th>
-                                    <th>Nama</th>
+                                    <th style="text-align:left;">Nama</th>
+                                    <th style="text-align:left;">Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
                                     <th>Full Name</th>
-                                    <th>Attendance Status</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,15 +211,17 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Nip</th>
                                     <th>Nama</th>
-                                    <th>Attendance Status</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Nip</th>
+                                    <th>Full Name</th>
+                                    <th>Status</th>
                                     <th>Lokasi</th>
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </tfoot>
                         </table>
