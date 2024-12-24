@@ -101,7 +101,7 @@
 
 <script>
     let isWithinRange = false;
-    let locationName = "";
+    let locationName = null;
     const locations = [
         <?php
         if ($lokasi_absensi) {
@@ -326,65 +326,66 @@
     }
 
     function markAttendance(detectedFaces) {
-        document.querySelectorAll("#studentTableContainer tr").forEach((row) => {
+        // document.querySelectorAll("#studentTableContainer tr").forEach((row) => {
 
-            // const username = row.cells[0].innerText.trim();
-            const username = document.getElementById('username').innerText; // Update attendance status
+        // const username = row.cells[0].innerText.trim();
+        const username = document.getElementById('username').innerText; // Update attendance status
 
-            <?php
+        <?php
 
-            date_default_timezone_set('Asia/Jakarta');
-            $current_time = new DateTime();
-            $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-            $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
-            ?>
-            if (detectedFaces.includes(username)) {
-                if (isWithinRange) {
-                    <?php
-                    if ($current_time <= $jam_masuk_plus_two || $current_time >= $jam_keluar_plus_two) {
-                    ?>
-                        document.getElementById('absent').innerText = "Present"; // Update attendance status
-                        document.getElementById('lokasi').innerText = locationName; // Update location
-                    <?php
-                    } else {
-                    ?>
-                        document.getElementById('absent').innerText = "Pending"; // Update attendance status
-                        document.getElementById('lokasi').innerText = locationName; // Update location
-                    <?php
-                    }
-                    ?>
+        date_default_timezone_set('Asia/Jakarta');
+        $current_time = new DateTime();
+        $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+        ?>
+        if (detectedFaces.includes(username)) {
+            if (isWithinRange) {
+                <?php
+                if ($current_time <= $jam_masuk_plus_two || $current_time >= $jam_keluar_plus_two) {
+                ?>
+                    document.getElementById('absent').innerText = "Present"; // Update attendance status
+                    document.getElementById('lokasi').innerText = locationName; // Update location
+                <?php
                 } else {
+                ?>
                     document.getElementById('absent').innerText = "Pending"; // Update attendance status
-                    document.getElementById('lokasi').innerText = "Di Luar"; // Update location
+                    document.getElementById('lokasi').innerText = locationName; // Update location
+                <?php
                 }
-                const currentDate = new Date(); // Get the current date and time (UTC by default)
-
-                // Calculate the time offset for Indonesia (UTC+7 for WIB, UTC+8 for WITA, UTC+9 for WIT)
-                const indonesiaTimeOffset = 7; // Change to 8 or 9 for WITA or WIT, respectively
-                const indonesiaTime = new Date(currentDate.getTime() + indonesiaTimeOffset * 60 * 60 * 1000);
-
-                // Format the date and time as "YYYY-MM-DD HH:MM:SS"
-                const formattedDateTime = indonesiaTime.toISOString().replace("T", " ").split(".")[0];
-
-                // Format only the date as "YYYY-MM-DD"
-                const formattedDateOnly = indonesiaTime.toISOString().split("T")[0];
-
-                // Update the element with id='tanggal' to display the full date and time
-                document.getElementById('tanggal').innerText = formattedDateTime;
-
-                // Update the element with id='tanggalonly' to display only the date
-                document.getElementById('tanggalonly').innerText = formattedDateOnly;
-
-
-
-
-                Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
-                const videoContainer = document.querySelector(".video-container");
-                videoContainer.style.display = "none";
-                stopWebcam();
-
+                ?>
+            } else {
+                document.getElementById('absent').innerText = "Pending"; // Update attendance status
+                document.getElementById('lokasi').innerText = "Di Luar"; // Update location
+                locationName = "Di Luar";
             }
-        });
+            const currentDate = new Date(); // Get the current date and time (UTC by default)
+
+            // Calculate the time offset for Indonesia (UTC+7 for WIB, UTC+8 for WITA, UTC+9 for WIT)
+            const indonesiaTimeOffset = 7; // Change to 8 or 9 for WITA or WIT, respectively
+            const indonesiaTime = new Date(currentDate.getTime() + indonesiaTimeOffset * 60 * 60 * 1000);
+
+            // Format the date and time as "YYYY-MM-DD HH:MM:SS"
+            const formattedDateTime = indonesiaTime.toISOString().replace("T", " ").split(".")[0];
+
+            // Format only the date as "YYYY-MM-DD"
+            const formattedDateOnly = indonesiaTime.toISOString().split("T")[0];
+
+            // Update the element with id='tanggal' to display the full date and time
+            document.getElementById('tanggal').innerText = formattedDateTime;
+
+            // Update the element with id='tanggalonly' to display only the date
+            document.getElementById('tanggalonly').innerText = formattedDateOnly;
+
+
+
+
+            Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
+            const videoContainer = document.querySelector(".video-container");
+            videoContainer.style.display = "none";
+            stopWebcam();
+
+        }
+        // });
     }
 
     function updateOtherElements() {
@@ -524,8 +525,8 @@
                 });
 
             }, 100);
-
             sendAttendanceDataToServer();
+
         });
 
     }
@@ -545,7 +546,8 @@
         const nip = document.getElementById('nip').innerText;
         const nama = document.getElementById('nama').innerText;
         const attendanceStatus = document.getElementById('absent').innerText;
-        const lokasiAttendance = document.getElementById('lokasi').innerText;
+        // const lokasiAttendance = document.getElementById('lokasi').innerText;
+        const lokasiAttendance = locationName;
         const tanggalAttendance = document.getElementById('tanggalonly').innerText;
 
         attendanceData.push({
