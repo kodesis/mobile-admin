@@ -105,9 +105,12 @@
     let AttendanceStatus = 'Absent';
     const locations = [
         <?php
+
+
+
         if ($lokasi_absensi) {
             foreach ($lokasi_absensi as $l) {
-                if ($l['id'] == $this->session->userdata('id_lokasi_presensi')) { ?> {
+                if ($l['id'] == $lokasi_presensi_user->id_lokasi_presensi) { ?> {
                         name: "<?= addslashes($l['nama_lokasi']) ?>", // Ensure the name is properly escaped and quoted
                         latitude: <?= $l['latitude'] ?>,
                         longitude: <?= $l['longitude'] ?>,
@@ -167,8 +170,17 @@
             updateTable();
         } else {
             $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
-            Swal.fire('Success', `You are not within range. Updating table...`, 'success');
-            updateTable();
+            // Swal.fire('Alert', `You are not within range. Updating table...`, 'warning');
+            Swal.fire({
+                title: 'You are not within range! Ingin Tetap Absen?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Absen',
+                cancelButtonText: 'Tidak',
+                reverseButtons: true
+            }).then((result) => {
+                updateTable();
+            });
         }
     }
 
@@ -653,7 +665,7 @@
                 updateTableMasuk(); // Call function
             <?php } ?>
         <?php } else if ($current_time >= $jam_keluar_plus_two) { ?>
-            <?php if (empty($result1)) { ?>
+            <?php if (empty($resul2)) { ?>
                 console.log('ada2');
                 getLocation(); // Call function
             <?php } else { ?>

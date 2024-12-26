@@ -90,7 +90,7 @@ class Absensi extends CI_Controller
             // Ensure $cek_user is not null and contains jam_masuk and jam_keluar
             if ($data_user && isset($data_user->jam_masuk) && isset($data_user->jam_keluar)) {
                 $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
-                $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
+                $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+0 hours')->format('H:i:s');
             } else {
                 echo 'Error: Missing "jam_masuk" or "jam_keluar" data.';
                 return;
@@ -121,10 +121,16 @@ class Absensi extends CI_Controller
             $query = $this->db->get(); // Execute the query
             $result3 = $query->result_array(); // Fetch results
 
+            $this->db->select('*');
+            $this->db->from('users');
+            $this->db->where('username', $this->session->userdata('username')); // Filter by username
+            $query = $this->db->get(); // Execute the query
+            $lokasi_presensi_user = $query->row(); // Fetch results
 
             $data['result1'] = $result1;
             $data['result2'] = $result2;
             $data['result3'] = $result3;
+            $data['lokasi_presensi_user'] = $lokasi_presensi_user;
 
             $this->load->view('Layouts/v_header', $data);
             $this->load->view('absensi/v_absen_wfa', $data);
@@ -172,7 +178,7 @@ class Absensi extends CI_Controller
                     $this->db->from('tblattendance'); // Table name
                     $this->db->where('username', $this->session->userdata('username'));
                     $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
-                    $this->db->where('TIME(waktu) <=', $jam_masuk_plus_two); // Check for records under jam_masuk_plus_two
+                    $this->db->where('tipe', 'Masuk'); // Check for records under jam_keluar_plus_two
                     $users = $this->db->get()->result_array();
 
                     $data['users'] = $users;
@@ -181,7 +187,7 @@ class Absensi extends CI_Controller
                     $this->db->from('tblattendance'); // Table name
                     $this->db->where('username', $this->session->userdata('username'));
                     $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
-                    $this->db->where('TIME(waktu) >=', $jam_keluar_plus_two); // Check for records under jam_keluar_plus_two
+                    $this->db->where('tipe', 'Pulang'); // Check for records under jam_keluar_plus_two
                     $users = $this->db->get()->result_array();
                     // return $query->result_array(); // Return the result as an array
 
@@ -191,8 +197,7 @@ class Absensi extends CI_Controller
                     $this->db->from('tblattendance');
                     $this->db->where('username', $this->session->userdata('username')); // Filter by username
                     $this->db->where('DATE(date)', date('Y-m-d')); // Today's date
-                    $this->db->where('TIME(waktu) >=', $jam_masuk_plus_two); // Check for records after jam_masuk_plus_two
-                    $this->db->where('TIME(waktu) <=', $jam_keluar_plus_two); // Check for records before jam_keluar_plus_two
+                    $this->db->where_in('tipe', ['Masuk', 'Telat']);
                     $users = $this->db->get()->result_array();
                     $data['users'] = $users;
                 } else {
