@@ -465,6 +465,8 @@
                                 descriptions.push(detections.descriptor);
                             } else {
                                 console.log(`No face detected in ${label}/${i}.png`);
+                                Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+
                             }
                         } catch (error) {
                             console.error(`Error processing ${label}/${i}.png:`, error);
