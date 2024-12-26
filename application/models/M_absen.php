@@ -272,16 +272,24 @@ class M_absen extends CI_Model
                             $tipe = 'Pulang';
                         }
 
-                        // Insert the attendance record
-                        $this->db->insert('tblattendance', [
-                            'username' => $data['username'],
-                            'nip' => $data['nip'],
-                            'nama' => $data['nama'],
-                            'attendanceStatus' => $data['attendanceStatus'],
-                            'lokasiAttendance' => $data['lokasiAttendance'],
-                            'date' => date("Y-m-d"),
-                            'tipe' => $tipe
-                        ]);
+                        $this->db->select('*');
+                        $this->db->from('tblattendance');
+                        $this->db->where('username', $data['username']);
+                        $this->db->where('tipe', $tipe);
+                        $this->db->where('date', date("Y-m-d"));
+                        $cek_absen = $this->db->get()->row();
+                        if (empty($cek_absen)) {
+                            // Insert the attendance record
+                            $this->db->insert('tblattendance', [
+                                'username' => $data['username'],
+                                'nip' => $data['nip'],
+                                'nama' => $data['nama'],
+                                'attendanceStatus' => $data['attendanceStatus'],
+                                'lokasiAttendance' => $data['lokasiAttendance'],
+                                'date' => date("Y-m-d"),
+                                'tipe' => $tipe
+                            ]);
+                        }
                     } else {
                         $response['status'] = 'error';
                         $response['message'] = "User not found for username: " . $data['username'];

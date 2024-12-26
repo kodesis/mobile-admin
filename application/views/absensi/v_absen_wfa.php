@@ -381,9 +381,6 @@
             // Update the element with id='tanggalonly' to display only the date
             document.getElementById('tanggalonly').innerText = formattedDateOnly;
 
-
-
-
             Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
             const videoContainer = document.querySelector(".video-container");
             videoContainer.style.display = "none";
