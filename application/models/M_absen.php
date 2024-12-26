@@ -152,7 +152,7 @@ class M_absen extends CI_Model
     function _get_datatables_query3()
     {
 
-        $this->db->select('tblattendance.*,users.bagian');
+        $this->db->select('tblattendance.*,users.supervisi');
         $this->db->from('tblattendance');
         $this->db->where('attendanceStatus', 'Pending');
         $this->db->where('supervisi', $this->session->userdata('nip'));
