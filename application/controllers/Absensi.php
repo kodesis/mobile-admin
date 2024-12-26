@@ -557,9 +557,9 @@ class Absensi extends CI_Controller
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
             // $row[] = $cat->halaman_page;
-            if ($this->session->userdata('level_jabatan') == 3) {
-                if ($cat->attendanceStatus == 'Pending') {
-                    $row[] = '<center> <div class="list-icons d-inline-flex">
+
+            if ($cat->attendanceStatus == 'Pending') {
+                $row[] = '<center> <div class="list-icons d-inline-flex">
                 <button title="Update User" onclick="onApprove(' . $cat->id . ')" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
   <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
 </svg></button>
@@ -568,11 +568,8 @@ class Absensi extends CI_Controller
 </svg></button>
             </div>
     </center>';
-                } else {
-                    $row[] = 'Approved';
-                }
             } else {
-                $row[] = '';
+                $row[] = 'Approved';
             }
 
 
