@@ -155,7 +155,7 @@ class M_absen extends CI_Model
         $this->db->select('tblattendance.*,users.bagian');
         $this->db->from('tblattendance');
         $this->db->where('attendanceStatus', 'Pending');
-        $this->db->where('bagian', $this->session->userdata('bagian'));
+        $this->db->where('supervisi', $this->session->userdata('nip'));
         $this->db->join('users', 'users.username = tblattendance.username');
         $i = 0;
 
