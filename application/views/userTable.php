@@ -116,6 +116,11 @@
                     echo "<td>:</td>";
                     echo "<td>" . htmlspecialchars($user["lokasiAttendance"]) . "</td>";
                     echo "</tr>";
+
+                    echo "<tr>";
+                    echo "<td colspan = '2' style='text-align: center;'><img style='display: block;
+    margin: 0 auto;' width='200px' src='" . base_url('upload/attendance/' . $user['image']) . "'></td>";
+                    echo "</tr>";
                 endforeach;
             }
             ?>

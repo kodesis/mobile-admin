@@ -169,8 +169,6 @@
             Swal.fire('Success', `You are within range of ${locationName}. Updating table...`, 'success');
             updateTable();
         } else {
-            $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
-            // Swal.fire('Alert', `You are not within range. Updating table...`, 'warning');
             Swal.fire({
                 title: 'You are not within range! Ingin Tetap Absen?',
                 icon: 'warning',
@@ -179,8 +177,11 @@
                 cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
+                $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
                 updateTable();
             });
+            // Swal.fire('Alert', `You are not within range. Updating table...`, 'warning');
+
         }
     }
 
@@ -396,11 +397,40 @@
             Swal.fire('Success', `Anda Berhasil Melakukan Absensi`, 'success');
             const videoContainer = document.querySelector(".video-container");
             videoContainer.style.display = "none";
+
+            // const capturedImage = captureImage(video);
+
+            // const imageBox = document.createElement("div");
+            // imageBox.classList.add("image-box");
+
+            // const hiddenInput = document.createElement("input");
+            // hiddenInput.type = "hidden";
+            // hiddenInput.id = `image_captured`;
+            // hiddenInput.name = `capturedImage`;
+            // imageBox.appendChild(hiddenInput);
+
+            // const hiddenInputs = document.getElementById(
+            //     `image_captured`
+            // );
+            // hiddenInputs.value = capturedImage;
+            const capturedImage = captureImage(video);
+
             stopWebcam();
-            sendAttendanceDataToServer();
+            sendAttendanceDataToServer(capturedImage);
 
         }
         // });
+    }
+
+    function captureImage(video) {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        return canvas.toDataURL("image/png");
     }
 
     function updateOtherElements() {
@@ -549,63 +579,104 @@
 
     let isSubmitting = false; // Flag to track if data is being submitted
 
-    function sendAttendanceDataToServer() {
-        // if (isSubmitting) return; // Prevent multiple submissions
+    // function sendAttendanceDataToServer(capturedImage) {
+    //     // if (isSubmitting) return; // Prevent multiple submissions
 
-        // isSubmitting = true; // Set the flag to prevent re-submission
+    //     // isSubmitting = true; // Set the flag to prevent re-submission
 
-        const attendanceData = [];
+    //     const attendanceData = [];
 
 
-        // Getting values for the attendance
-        const username = document.getElementById('username').innerText;
-        const nip = document.getElementById('nip').innerText;
-        const nama = document.getElementById('nama').innerText;
-        // const attendanceStatus = document.getElementById('absent').innerText;
-        const attendanceStatus = AttendanceStatus;
-        // const lokasiAttendance = document.getElementById('lokasi').innerText;
-        const lokasiAttendance = locationName;
-        const tanggalAttendance = document.getElementById('tanggalonly').innerText;
+    //     // Getting values for the attendance
+    //     const username = document.getElementById('username').innerText;
+    //     const nip = document.getElementById('nip').innerText;
+    //     const nama = document.getElementById('nama').innerText;
+    //     // const attendanceStatus = document.getElementById('absent').innerText;
+    //     const attendanceStatus = AttendanceStatus;
+    //     // const lokasiAttendance = document.getElementById('lokasi').innerText;
+    //     const lokasiAttendance = locationName;
+    //     const tanggalAttendance = document.getElementById('tanggalonly').innerText;
+    //     const image = capturedImage;
 
-        attendanceData.push({
-            username,
-            nip,
-            nama,
-            attendanceStatus,
-            lokasiAttendance,
-        });
+    //     attendanceData.push({
+    //         username,
+    //         nip,
+    //         nama,
+    //         attendanceStatus,
+    //         lokasiAttendance,
+    //         image,
+    //     });
 
-        console.log(attendanceData);
+    //     console.log(attendanceData);
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.open("POST", "recordAttendance", true);
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+
+    //     xhr.onreadystatechange = function() {
+    //         if (xhr.readyState === 4) {
+    //             isSubmitting = false; // Reset flag after request completes
+
+    //             if (xhr.status === 200) {
+    //                 try {
+    //                     const response = JSON.parse(xhr.responseText);
+
+    //                     if (response.status === "success") {
+    //                         showMessage(
+    //                             response.message || "Attendance recorded successfully."
+    //                         );
+    //                     } else {
+    //                         showMessage(
+    //                             response.message ||
+    //                             "An error occurred while recording attendance."
+    //                         );
+    //                     }
+    //                 } catch (e) {
+    //                     showMessage("Error: Failed to parse the response from the server.");
+    //                     console.error(e);
+    //                 }
+    //             } else {
+    //                 showMessage(
+    //                     "Error: Unable to record attendance. HTTP Status: " + xhr.status
+    //                 );
+    //                 console.error("HTTP Error", xhr.status, xhr.statusText);
+    //             }
+    //         }
+    //     };
+
+    //     xhr.send(JSON.stringify(attendanceData));
+    // }
+
+    function sendAttendanceDataToServer(capturedImage) {
+        const attendanceData = {
+            username: document.getElementById('username').innerText.trim(),
+            nip: document.getElementById('nip').innerText.trim(),
+            nama: document.getElementById('nama').innerText.trim(),
+            attendanceStatus: AttendanceStatus,
+            lokasiAttendance: locationName,
+            tanggalAttendance: document.getElementById('tanggalonly').innerText.trim(),
+            capturedImage: capturedImage // Base64 encoded image data
+        };
+
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "recordAttendance", true);
+        xhr.open("POST", "<?= base_url('absensi/recordAttendance') ?>", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
-                isSubmitting = false; // Reset flag after request completes
-
                 if (xhr.status === 200) {
                     try {
                         const response = JSON.parse(xhr.responseText);
-
                         if (response.status === "success") {
-                            showMessage(
-                                response.message || "Attendance recorded successfully."
-                            );
+                            Swal.fire('Success', response.message || 'Attendance recorded successfully.', 'success');
                         } else {
-                            showMessage(
-                                response.message ||
-                                "An error occurred while recording attendance."
-                            );
+                            Swal.fire('Error', response.message || 'An error occurred while recording attendance.', 'error');
                         }
                     } catch (e) {
-                        showMessage("Error: Failed to parse the response from the server.");
+                        Swal.fire('Error', 'Failed to parse server response.', 'error');
                         console.error(e);
                     }
                 } else {
-                    showMessage(
-                        "Error: Unable to record attendance. HTTP Status: " + xhr.status
-                    );
+                    Swal.fire('Error', `Unable to record attendance. HTTP Status: ${xhr.status}`, 'error');
                     console.error("HTTP Error", xhr.status, xhr.statusText);
                 }
             }
@@ -613,7 +684,6 @@
 
         xhr.send(JSON.stringify(attendanceData));
     }
-
 
     function showMessage(message) {
         var messageDiv = document.getElementById("messageDiv");

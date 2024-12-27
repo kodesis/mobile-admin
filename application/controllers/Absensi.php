@@ -248,7 +248,7 @@ class Absensi extends CI_Controller
         }
 
         // Process images
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $capturedImage = $this->input->post("capturedImage{$i}");
             if ($capturedImage) {
                 $base64Data = explode(',', $capturedImage)[1];
@@ -289,19 +289,51 @@ class Absensi extends CI_Controller
             return;
         }
 
-        $attendanceData = json_decode(file_get_contents("php://input"), true);
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!$attendanceData) {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'No attendance data received.'
-            ]);
+        if (!$data || !isset($data['capturedImage'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid data or missing image.']);
             return;
         }
 
-        $response = $this->user->insertAttendance($attendanceData);
+        $folderPath = FCPATH . "upload/attendance/";
 
-        echo json_encode($response);
+        // Ensure the directory exists
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0755, true);
+        }
+
+        // Process and save the image
+        $base64Data = explode(',', $data['capturedImage'])[1];
+        $imageData = base64_decode($base64Data);
+        $filename = 'Attendance_' . uniqid() . '.png';
+
+        if (file_put_contents($folderPath . $filename, $imageData)) {
+            // Save attendance data to the database
+            $attendance = [
+                'username' => $data['username'],
+                'nip' => $data['nip'],
+                'nama' => $data['nama'],
+                'attendanceStatus' => $data['attendanceStatus'],
+                'lokasiAttendance' => $data['lokasiAttendance'],
+                'tanggalAttendance' => $data['tanggalAttendance'],
+                'image' => $filename
+            ];
+
+            // Call the method to insert attendance
+            $response = $this->user->insertAttendance($attendance);
+
+            // Return the response to the client
+            // echo json_encode($response);
+
+
+            echo json_encode(['status' => 'success', 'message' => 'Attendance recorded successfully.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to save image.']);
+        }
+
+
+        // echo json_encode($response);
     }
     public function delete_user_images()
     {
@@ -434,6 +466,7 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
+            $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
             // $row[] = $cat->halaman_page;
 
 
@@ -496,6 +529,7 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
+            $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
             // $row[] = $cat->halaman_page;
 
 
@@ -561,6 +595,11 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
+            if (!isset($cat->image)) {
+                $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
+            } else {
+                $row[] = 'No Image';
+            }
             // $row[] = $cat->halaman_page;
 
             if ($cat->attendanceStatus == 'Pending') {

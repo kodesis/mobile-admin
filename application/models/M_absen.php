@@ -231,71 +231,72 @@ class M_absen extends CI_Model
         $this->db->where('username', $username);
         return $this->db->count_all_results('users') > 0;
     }
-    public function insertAttendance($attendanceData)
+    public function insertAttendance($data)
     {
         $response = ['status' => 'error', 'message' => 'No data provided'];
 
 
-        if (!empty($attendanceData)) {
+        if (!empty($data)) {
             try {
-                foreach ($attendanceData as $data) {
-                    // Fetch the user's jam_masuk and jam_keluar values
-                    $this->db->select('jam_masuk, jam_keluar');
-                    $this->db->from('users');
-                    $this->db->where('username', $data['username']);
-                    $jam = $this->db->get()->row();
+                // foreach ($attendanceData as $data) {
+                // Fetch the user's jam_masuk and jam_keluar values
+                $this->db->select('jam_masuk, jam_keluar');
+                $this->db->from('users');
+                $this->db->where('username', $data['username']);
+                $jam = $this->db->get()->row();
 
-                    // Ensure we have both jam_masuk and jam_keluar
-                    if ($jam) {
-                        // Get current time and time ranges
-                        $currentTime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+                // Ensure we have both jam_masuk and jam_keluar
+                if ($jam) {
+                    // Get current time and time ranges
+                    $currentTime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 
-                        // Parse jam_masuk and jam_keluar as DateTime objects
-                        $startOfDay = new DateTime($jam->jam_masuk); // Assuming format is H:i:s
-                        $endOfDay = new DateTime($jam->jam_keluar);
-                        $startOfDay->modify('+2 hours');
+                    // Parse jam_masuk and jam_keluar as DateTime objects
+                    $startOfDay = new DateTime($jam->jam_masuk); // Assuming format is H:i:s
+                    $endOfDay = new DateTime($jam->jam_keluar);
+                    $startOfDay->modify('+2 hours');
 
-                        // Debug outputs
-                        // echo "Current Time: " . $currentTime->format('H:i:s') . "<br>";
-                        // echo "Start of Day: " . $startOfDay->format('H:i:s') . "<br>";
-                        // echo "End of Day: " . $endOfDay->format('H:i:s') . "<br>";
+                    // Debug outputs
+                    // echo "Current Time: " . $currentTime->format('H:i:s') . "<br>";
+                    // echo "Start of Day: " . $startOfDay->format('H:i:s') . "<br>";
+                    // echo "End of Day: " . $endOfDay->format('H:i:s') . "<br>";
 
-                        // Check the time and set 'tipe' based on current time
-                        if ($currentTime->format('H:i:s') < $startOfDay->format('H:i:s')) {
-                            // Before jam_masuk, it is 'Masuk'
-                            $tipe = 'Masuk';
-                        } elseif ($currentTime->format('H:i:s') >= $startOfDay->format('H:i:s') && $currentTime->format('H:i:s') < $endOfDay->format('H:i:s')) {
-                            // Between jam_masuk and jam_keluar, it is 'Keluar'
-                            $tipe = 'Telat';
-                        } elseif ($currentTime->format('H:i:s') >= $endOfDay->format('H:i:s')) {
-                            // After jam_keluar, it is 'Pulang'
-                            $tipe = 'Pulang';
-                        }
-
-                        $this->db->select('*');
-                        $this->db->from('tblattendance');
-                        $this->db->where('username', $data['username']);
-                        $this->db->where('tipe', $tipe);
-                        $this->db->where('date', date("Y-m-d"));
-                        $cek_absen = $this->db->get()->row();
-                        if (empty($cek_absen)) {
-                            // Insert the attendance record
-                            $this->db->insert('tblattendance', [
-                                'username' => $data['username'],
-                                'nip' => $data['nip'],
-                                'nama' => $data['nama'],
-                                'attendanceStatus' => $data['attendanceStatus'],
-                                'lokasiAttendance' => $data['lokasiAttendance'],
-                                'date' => date("Y-m-d"),
-                                'tipe' => $tipe
-                            ]);
-                        }
-                    } else {
-                        $response['status'] = 'error';
-                        $response['message'] = "User not found for username: " . $data['username'];
-                        return $response;
+                    // Check the time and set 'tipe' based on current time
+                    if ($currentTime->format('H:i:s') < $startOfDay->format('H:i:s')) {
+                        // Before jam_masuk, it is 'Masuk'
+                        $tipe = 'Masuk';
+                    } elseif ($currentTime->format('H:i:s') >= $startOfDay->format('H:i:s') && $currentTime->format('H:i:s') < $endOfDay->format('H:i:s')) {
+                        // Between jam_masuk and jam_keluar, it is 'Keluar'
+                        $tipe = 'Telat';
+                    } elseif ($currentTime->format('H:i:s') >= $endOfDay->format('H:i:s')) {
+                        // After jam_keluar, it is 'Pulang'
+                        $tipe = 'Pulang';
                     }
+
+                    $this->db->select('*');
+                    $this->db->from('tblattendance');
+                    $this->db->where('username', $data['username']);
+                    $this->db->where('tipe', $tipe);
+                    $this->db->where('date', date("Y-m-d"));
+                    $cek_absen = $this->db->get()->row();
+                    if (empty($cek_absen)) {
+                        // Insert the attendance record
+                        $this->db->insert('tblattendance', [
+                            'username' => $data['username'],
+                            'nip' => $data['nip'],
+                            'nama' => $data['nama'],
+                            'attendanceStatus' => $data['attendanceStatus'],
+                            'lokasiAttendance' => $data['lokasiAttendance'],
+                            'date' => date("Y-m-d"),
+                            'tipe' => $tipe,
+                            'image' => $data['image']
+                        ]);
+                    }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = "User not found for username: " . $data['username'];
+                    return $response;
                 }
+                // }
 
                 $response['status'] = 'success';
                 $response['message'] = "Attendance recorded successfully for all entries.";

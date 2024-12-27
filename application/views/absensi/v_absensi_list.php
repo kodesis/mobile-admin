@@ -95,6 +95,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
@@ -123,6 +124,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <!-- <th>Action</th> -->
                                 </tr>
                             </tfoot>
@@ -144,6 +146,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
@@ -172,6 +175,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <!-- <th>Action</th> -->
                                 </tr>
                             </tfoot>
@@ -193,6 +197,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -221,6 +226,7 @@
                                     <th>Tipe</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
+                                    <th>Image</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
