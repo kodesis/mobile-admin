@@ -735,7 +735,9 @@
                 updateTableMasuk(); // Call function
             <?php } ?>
         <?php } else if ($current_time >= $jam_keluar_plus_two) { ?>
-            <?php if (empty($resul2)) { ?>
+            <?php if (empty($result2)) {
+                // var_dump($result2);
+            ?>
                 console.log('ada2');
                 getLocation(); // Call function
             <?php } else { ?>
