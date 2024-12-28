@@ -169,6 +169,7 @@
             Swal.fire('Success', `You are within range of ${locationName}. Updating table...`, 'success');
             updateTable();
         } else {
+            $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
             Swal.fire({
                 title: 'You are not within range! Ingin Tetap Absen?',
                 icon: 'warning',
@@ -177,8 +178,9 @@
                 cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
-                $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
-                updateTable();
+                if (result.isConfirmed) { // Check if the confirm button was clicked
+                    updateTable(); // Execute this function only on confirmation
+                }
             });
             // Swal.fire('Alert', `You are not within range. Updating table...`, 'warning');
 
@@ -507,7 +509,7 @@
                                 descriptions.push(detections.descriptor);
                             } else {
                                 console.log(`No face detected in ${label}/${i}.png`);
-                                Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                                // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
 
                             }
                         } catch (error) {
