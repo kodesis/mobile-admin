@@ -308,29 +308,30 @@ class Absensi extends CI_Controller
         $imageData = base64_decode($base64Data);
         $filename = 'Attendance_' . uniqid() . '.png';
 
-        if (file_put_contents($folderPath . $filename, $imageData)) {
-            // Save attendance data to the database
-            $attendance = [
-                'username' => $data['username'],
-                'nip' => $data['nip'],
-                'nama' => $data['nama'],
-                'attendanceStatus' => $data['attendanceStatus'],
-                'lokasiAttendance' => $data['lokasiAttendance'],
-                'tanggalAttendance' => $data['tanggalAttendance'],
-                'image' => $filename
-            ];
 
-            // Call the method to insert attendance
-            $response = $this->user->insertAttendance($attendance);
+        // if (file_put_contents($folderPath . $filename, $imageData)) {
+        // Save attendance data to the database
+        file_put_contents($folderPath . $filename, $imageData);
+        $attendance = [
+            'username' => $data['username'],
+            'nip' => $data['nip'],
+            'nama' => $data['nama'],
+            'attendanceStatus' => $data['attendanceStatus'],
+            'lokasiAttendance' => $data['lokasiAttendance'],
+            'tanggalAttendance' => $data['tanggalAttendance'],
+            'image' => $filename
+        ];
 
-            // Return the response to the client
-            // echo json_encode($response);
+        // Call the method to insert attendance
+        $response = $this->user->insertAttendance($attendance);
 
+        // Return the response to the client
+        // echo json_encode($response);
 
-            echo json_encode(['status' => 'success', 'message' => 'Attendance recorded successfully.']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to save image.']);
-        }
+        echo json_encode(['status' => 'success', 'message' => 'Attendance recorded successfully.']);
+        // } else {
+        // echo json_encode(['status' => 'error', 'message' => 'Failed to save image.']);
+        // }
 
 
         // echo json_encode($response);
