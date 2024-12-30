@@ -513,6 +513,7 @@
 
                             }
                         } catch (error) {
+
                             console.error(`Error processing ${label}/${i}.png:`, error);
                         }
                     }
