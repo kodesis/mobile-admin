@@ -311,24 +311,63 @@ class Absensi extends CI_Controller
 
         // if (file_put_contents($folderPath . $filename, $imageData)) {
         // Save attendance data to the database
-        file_put_contents($folderPath . $filename, $imageData);
-        $attendance = [
-            'username' => $data['username'],
-            'nip' => $data['nip'],
-            'nama' => $data['nama'],
-            'attendanceStatus' => $data['attendanceStatus'],
-            'lokasiAttendance' => $data['lokasiAttendance'],
-            'tanggalAttendance' => $data['tanggalAttendance'],
-            'image' => $filename
-        ];
+        $this->db->select('jam_masuk, jam_keluar');
+        $this->db->from('users');
+        $this->db->where('username', $data['username']);
+        $jam = $this->db->get()->row();
+        $currentTime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+
+        // Parse jam_masuk and jam_keluar as DateTime objects
+        $startOfDay = new DateTime($jam->jam_masuk); // Assuming format is H:i:s
+        $endOfDay = new DateTime($jam->jam_keluar);
+        $startOfDay->modify('+2 hours');
+
+        // Debug outputs
+        // echo "Current Time: " . $currentTime->format('H:i:s') . "<br>";
+        // echo "Start of Day: " . $startOfDay->format('H:i:s') . "<br>";
+        // echo "End of Day: " . $endOfDay->format('H:i:s') . "<br>";
+
+        // Check the time and set 'tipe' based on current time
+        if ($currentTime->format('H:i:s') < $startOfDay->format('H:i:s')) {
+            // Before jam_masuk, it is 'Masuk'
+            $tipe = 'Masuk';
+        } elseif ($currentTime->format('H:i:s') >= $startOfDay->format('H:i:s') && $currentTime->format('H:i:s') < $endOfDay->format('H:i:s')) {
+            // Between jam_masuk and jam_keluar, it is 'Keluar'
+            $tipe = 'Telat';
+        } elseif ($currentTime->format('H:i:s') >= $endOfDay->format('H:i:s')) {
+            // After jam_keluar, it is 'Pulang'
+            $tipe = 'Pulang';
+        }
+
+        $this->db->select('*');
+        $this->db->from('tblattendance');
+        $this->db->where('username', $data['username']);
+        $this->db->where('tipe', $tipe);
+        $this->db->where('date', date("Y-m-d"));
+        $cek_absen = $this->db->get()->row();
+        if (empty($cek_absen)) {
+            if (file_put_contents($folderPath . $filename, $imageData)) {
+                $attendance = [
+                    'username' => $data['username'],
+                    'nip' => $data['nip'],
+                    'nama' => $data['nama'],
+                    'attendanceStatus' => $data['attendanceStatus'],
+                    'lokasiAttendance' => $data['lokasiAttendance'],
+                    'tanggalAttendance' => $data['tanggalAttendance'],
+                    'image' => $filename
+                ];
+                $response = $this->user->insertAttendance($attendance);
+                echo json_encode(['status' => 'success', 'message' => 'Attendance recorded successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save image.']);
+            }
+        }
 
         // Call the method to insert attendance
-        $response = $this->user->insertAttendance($attendance);
 
         // Return the response to the client
         // echo json_encode($response);
 
-        echo json_encode(['status' => 'success', 'message' => 'Attendance recorded successfully.']);
         // } else {
         // echo json_encode(['status' => 'error', 'message' => 'Failed to save image.']);
         // }
