@@ -666,17 +666,18 @@
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.status === "success") {
-                            Swal.fire('Success', response.message || 'Attendance recorded successfully.', 'success');
-                        } else {
-                            Swal.fire('Error', response.message || 'An error occurred while recording attendance.', 'error');
-                        }
-                    } catch (e) {
-                        Swal.fire('Error', 'Failed to parse server response.', 'error');
-                        console.error(e);
+                    // try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.status === "success") {
+                        Swal.fire('Success', response.message || 'Attendance recorded successfully.', 'success');
+                    } else {
+                        Swal.fire('Error', response.message || 'An error occurred while recording attendance.', 'error');
+                        console.log('gagal input');
                     }
+                    // } catch (e) {
+                    //     Swal.fire('Error', 'Failed to parse server response.', 'error');
+                    //     console.error(e);
+                    // }
                 } else {
                     Swal.fire('Error', `Unable to record attendance. HTTP Status: ${xhr.status}`, 'error');
                     console.error("HTTP Error", xhr.status, xhr.statusText);
