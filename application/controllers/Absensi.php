@@ -689,4 +689,117 @@ class Absensi extends CI_Controller
         );
         echo json_encode(array("status" => TRUE));
     }
+    public function process_export()
+    {
+        $tanggal = $this->input->post('tanggal');
+        list($month, $year) = explode('/', $tanggal);
+        $data_absensi = $this->input->post('data_absensi');
+        require APPPATH . 'third_party/autoload.php';
+
+        // Include PhpSpreadsheet from third_party
+        require APPPATH . 'third_party/psr/simple-cache/src/CacheInterface.php';
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set header columns
+        $sheet->setCellValue('A1', 'Nomor');
+        $sheet->setCellValue('B1', 'Username');
+        $sheet->setCellValue('C1', 'Nip');
+        $sheet->setCellValue('D1', 'FullName');
+        $sheet->setCellValue('E1', 'Status');
+        $sheet->setCellValue('F1', 'Lokasi');
+        $sheet->setCellValue('G1', 'Tipe');
+        $sheet->setCellValue('H1', 'Tanggal');
+        $sheet->setCellValue('I1', 'Waktu');
+        $sheet->setCellValue('J1', 'Image');
+
+        // Get data from the database
+        $this->load->database();
+        if ($data_absensi == 'Team') {
+            $this->db->select('tblattendance.*,users.bagian');
+        } else {
+            $this->db->select('tblattendance.*');
+        }
+        $this->db->from('tblattendance'); // Replace with your table name
+        $this->db->where('YEAR(date)', $year);
+        $this->db->where('MONTH(date)', $month);
+        if ($data_absensi == 'User') {
+            $this->db->where('username', $this->session->userdata('username'));
+        } else if ($data_absensi == 'Team') {
+            $this->db->where('bagian', $this->session->userdata('bagian'));
+            $this->db->join('users', 'users.username = tblattendance.username');
+        }
+        $query = $this->db->get();
+        $rows = $query->result_array();
+
+        // Populate rows with data
+        $nomor = 1;
+        $rowNumber = 2; // Start at row 2 because row 1 is the header
+        foreach ($rows as $row) {
+            $sheet->setCellValue('A' . $rowNumber, $nomor);
+            $sheet->setCellValue('B' . $rowNumber, $row['username']);
+            $sheet->setCellValue('C' . $rowNumber, $row['nip']);
+            $sheet->setCellValue('D' . $rowNumber, $row['nama']);
+            $sheet->setCellValue('E' . $rowNumber, $row['attendanceStatus']);
+            $sheet->setCellValue('F' . $rowNumber, $row['lokasiAttendance']);
+            $sheet->setCellValue('G' . $rowNumber, $row['tipe']);
+            $sheet->setCellValue('H' . $rowNumber, $row['date']);
+            $sheet->setCellValue('I' . $rowNumber, $row['waktu']);
+            if (!empty($row['image'])) {
+                $imagePath = FCPATH . 'upload' . DIRECTORY_SEPARATOR . 'attendance' . DIRECTORY_SEPARATOR . $row['image'];
+
+                // Check if the image exists
+                if (file_exists($imagePath)) {
+                    // If the image exists, insert it into the spreadsheet
+                    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $drawing->setName('Attendance Image');
+                    $drawing->setDescription('Attendance Image');
+                    $drawing->setPath($imagePath);  // Set the path to the image
+                    $drawing->setHeight(100); // Optional: Set the image height (you can adjust this)
+                    $drawing->setCoordinates('J' . $rowNumber); // Set the position of the image in the sheet
+                    $drawing->setWorksheet($sheet); // Attach the image to the worksheet
+                } else {
+                    // If the image is not found, set a message or placeholder
+                    $sheet->setCellValue('J' . $rowNumber, 'Image not found');  // Display a placeholder text in the cell
+                }
+            } else {
+                $sheet->setCellValue('J' . $rowNumber, 'Image Null');  // Display a placeholder text in the cell
+            }
+            $sheet->getRowDimension($rowNumber)->setRowHeight(80);
+            $rowNumber++;
+            $nomor++;
+        }
+
+        $sheet->getColumnDimension('A')->setWidth(3); // Set width kolom A
+        $sheet->getColumnDimension('B')->setWidth(15); // Set width kolom B
+        $sheet->getColumnDimension('C')->setWidth(15); // Set width kolom C
+        $sheet->getColumnDimension('D')->setWidth(15); // Set width kolom D
+        $sheet->getColumnDimension('E')->setWidth(15); // Set width kolom E
+        $sheet->getColumnDimension('F')->setWidth(15); // Set width kolom D
+        $sheet->getColumnDimension('G')->setWidth(18); // Set width kolom E
+        $sheet->getColumnDimension('H')->setWidth(18); // Set width kolom E
+        $sheet->getColumnDimension('I')->setWidth(18); // Set width kolom E
+        $sheet->getColumnDimension('J')->setWidth(25); // Set width kolom E
+
+        // Set the filename and save the file
+        $fileName = 'Export_' . date('Y-m-d_H-i-s') . '.xlsx';
+        require APPPATH . 'third_party/autoload_zip.php';
+
+        // Now PhpSpreadsheet's Xlsx writer can use ZipStream
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filePath = FCPATH . 'downloads/' . $fileName; // Save to a downloads folder
+
+        // Set headers to force download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="Absensi_' . $month . '_' . $year . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+
+        // Save the file to the browser for download
+        $writer->save('php://output');
+
+        // After the file is downloaded, perform the redirection to a list page or display a message
+        exit(); // Terminate script after download is complete
+    }
 }

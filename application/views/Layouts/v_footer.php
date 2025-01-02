@@ -19,6 +19,8 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/select2/js/select2.min.js"></script>
 <!-- CKEDITOR -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+<!-- DatePicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <!-- My Script -->
 <script src="<?= base_url('assets/js/myscript.js') ?>"></script>
 
@@ -27,7 +29,12 @@
     ClassicEditor.create(document.querySelector("#isi_memo")).then(editor => instance = editor);
     $(document).ready(function() {
         $('.js-example-basic-multiple').select2();
-
+        $('#tanggal_export_absensi').datepicker({
+            format: "mm/yyyy",
+            startView: "months",
+            minViewMode: "months",
+            autoclose: true
+        });
         if ($('body').hasClass('theme-dark') == true) {
             $("img[id='logo-bandes']").attr('src', '<?= base_url('assets/images/logo-white.png') ?>')
             $("img[id='logo-bandes2']").attr('src', '<?= base_url('assets/images/logo-white.png') ?>')

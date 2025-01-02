@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.5.0/css/rowReorder.dataTables.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 <style>
     #btn-create {
         position: fixed;
@@ -77,6 +78,8 @@
                     <?php
                     }
                     ?>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-8" style="color: #198754;"><i class="fa-solid fa-file-excel"></i> Export</a>
+
                     <!-- <a href="#" data-bs-toggle="collapse" data-bs-target="#tab-7">Tab 7</a> -->
                 </div>
                 <div class="clearfix mb-3"></div>
@@ -233,6 +236,30 @@
                         </table>
                     </div>
                 </div>
+                <div data-bs-parent="#tab-group-2" class="collapse" id="tab-8">
+                    <div class="content" style="cursor: pointer;  margin: 0;">
+                        <form class="form" id="form_export" action="<?= base_url('absensi/process_export') ?>" method="POST">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="" class="label">Tanggal Absensi</label>
+                                    <input type="text" class="form-control month-picker" name="tanggal" id="tanggal_export_absensi">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="" class="label">Data</label>
+                                    <select class="form-control" name="data_absensi" id="data_absensi">
+                                        <option value="All" selected>All</option>
+                                        <option value="User">User</option>
+                                        <option value="Team">Team</option>
+                                        <!-- <option value="Team">Team</option> -->
+                                    </select>
+
+                                </div>
+                            </div>
+                            <!-- <button class="btn btn-success rounded">Export</button> -->
+                        </form>
+                        <button class="btn btn-success rounded" onclick="proccess_export()">Export</button>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Pagination -->
@@ -250,7 +277,6 @@
         <!-- <a href="<?= base_url('app/create_memo') ?>" class="btn" id="btn-create"><i class="fa-solid fa-plus"></i></a> -->
     </div>
 </div>
-
 <script>
     function onApprove(id) {
         const swalWithBootstrapButtons = Swal.mixin({
@@ -394,5 +420,87 @@
     function refreshTable3() {
 
         $('#table3').DataTable().ajax.reload();
+    }
+
+    function proccess_export() {
+        const ttlTanggalValue = $('#tanggal_export_absensi').val();
+        const ttlDataValue = $('#data_absensi').val();
+
+        if (!ttlTanggalValue) {
+            // alert('Input is empty. Please fill it out.');
+            swal.fire({
+                customClass: 'slow-animation',
+                icon: 'error',
+                showConfirmButton: false,
+                title: 'Kolom Tanggal Export Tidak Boleh Kosong',
+                timer: 1500
+            });
+        } else if (!ttlDataValue) {
+            // alert('Input is empty. Please fill it out.');
+            swal.fire({
+                customClass: 'slow-animation',
+                icon: 'error',
+                showConfirmButton: false,
+                title: 'Kolom Data Tidak Boleh Kosong',
+                timer: 1500
+            });
+        } else {
+            // var url;
+            // var formData;
+            // url = "<?php echo site_url('absensi/process_export') ?>";
+            // var formData = new FormData($("#form_export")[0]);
+            // $.ajax({
+            //     url: url,
+            //     type: "POST",
+            //     data: formData,
+            //     contentType: false,
+            //     processData: false,
+            //     xhrFields: {
+            //         responseType: 'blob' // Expect a binary response (Excel file)
+            //     },
+            //     beforeSend: function() {
+            //         swal.fire({
+            //             icon: 'info',
+            //             timer: 3000,
+            //             showConfirmButton: false,
+            //             title: 'Loading...'
+
+            //         });
+            //     },
+            //     success: function(blob, status, xhr) {
+            //         const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+            //         const matches = contentDisposition.match(/filename="(.+)"/);
+            //         const fileName = matches ? matches[1] : 'export.xlsx';
+
+            //         const url = window.URL.createObjectURL(blob);
+            //         const a = document.createElement('a');
+            //         a.href = url;
+            //         a.download = fileName;
+            //         document.body.appendChild(a);
+            //         a.click();
+            //         a.remove();
+            //         window.URL.revokeObjectURL(url);
+
+            //         swal.fire({
+            //             customClass: 'slow-animation',
+            //             icon: 'success',
+            //             showConfirmButton: false,
+            //             title: 'Berhasil Melakuakn Export',
+            //             timer: 1500
+            //         });
+            //     },
+            //     error: function(jqXHR, textStatus, errorThrown) {
+            //         swal.fire('Operation Failed!', errorThrown, 'error');
+            //     },
+            //     complete: function() {
+            //         console.log('Editing job done');
+            //     }
+            // });
+            $('#form_export').submit();
+            setTimeout(function() {
+                location.reload();
+            }, 5000); // Delay of 10 seconds (10000 milliseconds)        }
+
+        }
     }
 </script>
