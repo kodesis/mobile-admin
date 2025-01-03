@@ -509,8 +509,11 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
-            $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
-            // $row[] = $cat->halaman_page;
+            if (isset($cat->image)) {
+                $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
+            } else {
+                $row[] = 'No Image';
+            }            // $row[] = $cat->halaman_page;
 
 
 
@@ -572,8 +575,11 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
-            $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
-            // $row[] = $cat->halaman_page;
+            if (isset($cat->image)) {
+                $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
+            } else {
+                $row[] = 'No Image';
+            }            // $row[] = $cat->halaman_page;
 
 
 
@@ -638,7 +644,7 @@ class Absensi extends CI_Controller
             $row[] = $cat->tipe;
             $row[] = $date->format('d') . ' ' . $months[$monthIndex] . ' ' . $date->format('Y');
             $row[] = $cat->waktu;
-            if (!isset($cat->image)) {
+            if (isset($cat->image)) {
                 $row[] = "<img width='200px' src='" . base_url('upload/attendance/' . $cat->image) . "'>";
             } else {
                 $row[] = 'No Image';
